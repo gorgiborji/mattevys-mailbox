@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mattevy's Mailbox 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── CSS CUSTOM PROPERTIES ───────────────────────────────────── */
+    :root {
+      --cream:      #FDF6EC;
+      --blush:      #F2C4CE;
+      --sage:       #B7C9B0;
+      --lavender:   #D4C5E2;
+      --ink:        #3D2B1F;
+      --ink-light:  #7A5C4F;
+      --stamp-red:  #C0392B;
+      --envelope:   #E8D5B7;
+      --card-bg:    #FFFDF7;
+      --border:     #E0C9A6;
+      --shadow:     rgba(61, 43, 31, 0.08);
+
+      /* category stripe colours */
+      --cat-food:      #F4A261;
+      --cat-outdoors:  #81B29A;
+      --cat-cozy:      #E8C5E5;
+      --cat-adventure: #F4D35E;
+      --cat-culture:   #B5C7D3;
+    }
+
+    /* ── RESET & BASE ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Paper texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── LAYOUT ───────────────────────────────────────────────────── */
+    #app-header, #app-main {
+      position: relative;
+      z-index: 1;
+    }
+
+    #app-header {
+      text-align: center;
+      padding: 32px 16px 20px;
+      position: relative;
+    }
+
+    .postmark-decoration {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .header-content { position: relative; z-index: 1; }
+
+    .app-title {
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: 2rem;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .app-tagline {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink-light);
+      margin-top: 4px;
+    }
+
+    .app-names {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--ink-light);
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+    }
+
+    .header-divider {
+      margin: 16px auto 0;
+      color: var(--border);
+      font-size: 14px;
+      letter-spacing: 0.4em;
+    }
+
+    #app-main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── SECTIONS ─────────────────────────────────────────────────── */
+    section { margin-top: 32px; }
+
+    .section-label {
+      font-family: 'Caveat', cursive;
+      font-size: 18px;
+      color: var(--ink-light);
+      margin-bottom: 8px;
+    }
+
+    .section-header {
+      font-family: 'Caveat', cursive;
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .archive-toggle {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .archive-toggle .archive-chevron {
+      margin-left: auto;
+      font-size: 16px;
+      transition: transform 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .archive-toggle.expanded .archive-chevron {
+      transform: rotate(180deg);
+    }
+
+    #archive-count {
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      color: var(--ink-light);
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .empty-state {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--ink-light);
+      opacity: 0.7;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    /* ── POSTCARD BASE ────────────────────────────────────────────── */
+    .postcard {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px var(--shadow), 0 0 0 1px var(--border);
+      padding: 20px 24px;
+      position: relative;
+      overflow: hidden;
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 60%),
+        repeating-linear-gradient(
+          transparent,
+          transparent 27px,
+          rgba(180, 150, 120, 0.15) 27px,
+          rgba(180, 150, 120, 0.15) 28px
+        );
+    }
+
+    /* Category stripe — set via inline style / data attr */
+    .postcard::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: 12px 0 0 12px;
+      background: var(--border);
+    }
+
+    .postcard[data-category="Food"]::before      { background: var(--cat-food); }
+    .postcard[data-category="Outdoors"]::before  { background: var(--cat-outdoors); }
+    .postcard[data-category="Cozy"]::before      { background: var(--cat-cozy); }
+    .postcard[data-category="Adventure"]::before { background: var(--cat-adventure); }
+    .postcard[data-category="Culture"]::before   { background: var(--cat-culture); }
+
+    /* Alternating rotation on The Box cards */
+    #the-box-list .postcard:nth-child(odd)  { transform: rotate(-0.5deg); --card-rotation: -0.5deg; }
+    #the-box-list .postcard:nth-child(even) { transform: rotate(0.5deg);  --card-rotation:  0.5deg; }
+
+    /* Archive desaturation */
+    #archive-list .postcard {
+      opacity: 0.7;
+      filter: grayscale(20%);
+    }
+
+    /* ── SUBMISSION CARD ──────────────────────────────────────────── */
+    #submission-section { margin-top: 20px; }
+
+    .submission-card {
+      padding: 24px 28px 20px;
+    }
+
+    .submission-card .card-watermark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Caveat', cursive;
+      font-size: 48px;
+      color: var(--ink);
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .submission-card .stamp-decoration {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 22px;
+      opacity: 0.6;
+      z-index: 1;
+    }
+
+    .submission-card input,
+    .submission-card textarea {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── FORM INPUTS ──────────────────────────────────────────────── */
+    .field-title {
+      font-family: 'Caveat', cursive;
+      font-size: 22px;
+      color: var(--ink);
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      padding: 4px 0 6px;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .field-title::placeholder {
+      color: var(--ink-light);
+      opacity: 0.6;
+      font-style: italic;
+    }
+
+    .field-title:focus {
+      border-bottom-color: var(--blush);
+    }
+
+    .field-description {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--ink);
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      padding: 4px 0 6px;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.2s;
+      margin-top: 6px;
+    }
+
+    .field-description::placeholder {
+      color: var(--ink-light);
+      opacity: 0.6;
+    }
+
+    .field-description:focus {
+      border-bottom-color: var(--blush);
+    }
+
+    .field-divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 14px 0;
+      opacity: 0.7;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .field-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .field-location {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--ink);
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      padding: 4px 0;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.2s;
+      min-width: 0;
+    }
+
+    .field-location::placeholder {
+      color: var(--ink-light);
+      opacity: 0.6;
+    }
+
+    .field-location:focus {
+      border-bottom-color: var(--blush);
+    }
+
+    /* ── CHIP GROUPS ──────────────────────────────────────────────── */
+    .chip-group {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink-light);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+
+    .chip:hover {
+      border-color: var(--blush);
+    }
+
+    .chip.selected {
+      background: var(--blush);
+      color: var(--ink);
+      border-color: var(--blush);
+      font-weight: 500;
+    }
+
+    /* ── SIGNATURE ────────────────────────────────────────────────── */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      margin-top: 14px;
+    }
+
+    .signature-label {
+      font-family: 'Caveat', cursive;
+      font-size: 14px;
+      color: var(--ink-light);
+    }
+
+    .signature-input {
+      font-family: 'Caveat', cursive;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--ink);
+      border: none;
+      background: transparent;
+      outline: none;
+      text-align: right;
+      width: 100px;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .signature-input::placeholder {
+      color: var(--ink-light);
+      opacity: 0.6;
+    }
+
+    .signature-input:focus {
+      border-bottom-color: var(--blush);
+    }
+
+    .signature-icon {
+      font-size: 14px;
+    }
+
+    /* ── SEND BUTTON ──────────────────────────────────────────────── */
+    .send-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--blush);
+      color: var(--ink);
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .send-btn:not(:disabled):hover {
+      background: #EDB0BC;
+    }
+
+    .send-btn:not(:disabled):active {
+      transform: scale(0.98);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .submit-error {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--stamp-red);
+      margin-top: 8px;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* ── IDEA CARDS ───────────────────────────────────────────────── */
+    .idea-card {
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .idea-card:hover {
+      box-shadow: 0 4px 16px var(--shadow), 0 0 0 1px var(--border);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      padding-left: 6px;
+    }
+
+    .card-title {
+      font-family: 'Caveat', cursive;
+      font-size: 20px;
+      color: var(--ink);
+      line-height: 1.2;
+      flex: 1;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .card-action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 5px;
+      border-radius: 6px;
+      transition: background 0.15s, transform 0.1s;
+      line-height: 1;
+      min-width: 32px;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-action-btn:hover {
+      background: rgba(61, 43, 31, 0.06);
+    }
+
+    .card-action-btn:active {
+      transform: scale(0.9);
+    }
+
+    .card-description {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink-light);
+      margin-top: 6px;
+      padding-left: 6px;
+      line-height: 1.5;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(180, 150, 120, 0.3);
+      padding-left: 6px;
+      flex-wrap: wrap;
+    }
+
+    .card-meta-item {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--ink-light);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .card-signature {
+      font-family: 'Caveat', cursive;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--ink-light);
+      text-align: right;
+      margin-top: 10px;
+      padding-left: 6px;
+    }
+
+    .delete-confirm {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--stamp-red);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+      margin-top: 6px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .delete-confirm button {
+      background: none;
+      border: 1px solid var(--stamp-red);
+      color: var(--stamp-red);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .delete-confirm .no-btn {
+      border-color: var(--border);
+      color: var(--ink-light);
+    }
+
+    /* ── CARD APPEAR ANIMATION ────────────────────────────────────── */
+    @keyframes cardAppear {
+      from { opacity: 0; transform: translateY(12px) rotate(-1deg); }
+      to   { opacity: 1; transform: translateY(0) rotate(var(--card-rotation, 0deg)); }
+    }
+
+    .card-appearing {
+      animation: cardAppear 0.35s ease forwards;
+    }
+
+    /* ── LOADING STATE ────────────────────────────────────────────── */
+    .loading .card-list {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* ── ANIMATION OVERLAY ────────────────────────────────────────── */
+    .anim-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(253, 246, 236, 0.94);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .anim-overlay.visible {
+      opacity: 1;
+    }
+
+    .anim-envelope {
+      width: 80px;
+      height: 56px;
+      position: absolute;
+    }
+
+    .anim-ballot-box {
+      width: 100px;
+      height: 120px;
+    }
+
+    .anim-hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 18px;
+      animation: floatHeart linear forwards;
+      opacity: 0;
+    }
+
+    /* ── KEYFRAMES ────────────────────────────────────────────────── */
+    @keyframes cardFold {
+      0%   { transform: perspective(800px) rotateX(0deg); opacity: 1; }
+      50%  { transform: perspective(800px) rotateX(-90deg) scaleX(0.95); }
+      100% { transform: perspective(800px) rotateX(-180deg) scaleX(0.9); opacity: 0.8; }
+    }
+
+    @keyframes envelopeDrop {
+      0%   { transform: translateY(-80px) rotate(-5deg); opacity: 1; }
+      70%  { transform: translateY(0px) rotate(2deg); }
+      85%  { transform: translateY(-8px) rotate(-1deg); }
+      100% { transform: translateY(8px) rotate(0deg); opacity: 0; }
+    }
+
+    @keyframes floatHeart {
+      0%   { transform: translateY(0) scale(0.8); opacity: 0.8; }
+      100% { transform: translateY(-90px) scale(1.3); opacity: 0; }
+    }
+
+    @keyframes boxPulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes envelopePulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes overlayFadeOut {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────────── */
+    @media (min-width: 640px) {
+      #app-main { padding: 0 24px 60px; }
+      .submission-card { padding: 28px 32px 24px; }
+    }
+
+    @media (min-width: 1024px) {
+      body { padding: 40px; }
+      #app-main { max-width: 520px; }
+    }
+
+    /* ── VISUALLY HIDDEN ──────────────────────────────────────────── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────────────────────── -->
+  <header id="app-header">
+    <!-- Postmark circle decoration -->
+    <svg class="postmark-decoration" width="160" height="160" viewBox="0 0 160 160"
+         aria-hidden="true" focusable="false">
+      <circle cx="80" cy="80" r="72" fill="none" stroke="#E0C9A6" stroke-width="2"
+              stroke-dasharray="6 4"/>
+      <circle cx="80" cy="80" r="58" fill="none" stroke="#E0C9A6" stroke-width="1"
+              stroke-dasharray="4 5"/>
+      <line x1="16" y1="72" x2="144" y2="72" stroke="#E0C9A6" stroke-width="1.5"/>
+      <line x1="16" y1="80" x2="144" y2="80" stroke="#E0C9A6" stroke-width="1.5"/>
+      <line x1="16" y1="88" x2="144" y2="88" stroke="#E0C9A6" stroke-width="1.5"/>
+    </svg>
+    <div class="header-content">
+      <h1 class="app-title">💌 Mattevy's Mailbox</h1>
+      <p class="app-tagline">"Drop your ideas. We'll make memories."</p>
+      <p class="app-names">Matt &nbsp;·&nbsp; Evy</p>
+    </div>
+    <p class="header-divider">· · ·</p>
+  </header>
+
+  <!-- ── MAIN ───────────────────────────────────────────────────── -->
+  <main id="app-main">
+
+    <!-- SUBMISSION SECTION -->
+    <section id="submission-section">
+      <p class="section-label">✉️ New Idea</p>
+      <div id="submission-card" class="postcard submission-card" style="transform-style: preserve-3d;">
+        <span class="card-watermark" id="form-watermark" aria-hidden="true">write your idea…</span>
+        <span class="stamp-decoration" aria-hidden="true">📮</span>
+
+        <label class="sr-only" for="field-title">Idea title</label>
+        <input
+          id="field-title"
+          class="field-title"
+          type="text"
+          placeholder="What's the idea?"
+          autocomplete="off"
+          aria-label="Idea title"
+          maxlength="120"
+        />
+
+        <label class="sr-only" for="field-description">Description</label>
+        <input
+          id="field-description"
+          class="field-description"
+          type="text"
+          placeholder="Describe it in one line…"
+          autocomplete="off"
+          aria-label="Description"
+          maxlength="240"
+        />
+
+        <hr class="field-divider" aria-hidden="true" />
+
+        <div class="field-row" role="group" aria-label="Cost">
+          <div class="chip-group" id="cost-chips" role="radiogroup" aria-label="Cost level">
+            <button class="chip" data-value="$"   role="radio" aria-checked="false" aria-label="Budget: $">$</button>
+            <button class="chip" data-value="$$"  role="radio" aria-checked="false" aria-label="Budget: $$">$$</button>
+            <button class="chip" data-value="$$$" role="radio" aria-checked="false" aria-label="Budget: $$$">$$$</button>
+          </div>
+          <div class="chip-group" id="category-chips" role="radiogroup" aria-label="Category">
+            <button class="chip" data-value="Food"      role="radio" aria-checked="false">Food</button>
+            <button class="chip" data-value="Outdoors"  role="radio" aria-checked="false">Outdoors</button>
+            <button class="chip" data-value="Cozy"      role="radio" aria-checked="false">Cozy</button>
+            <button class="chip" data-value="Adventure" role="radio" aria-checked="false">Adventure</button>
+            <button class="chip" data-value="Culture"   role="radio" aria-checked="false">Culture</button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <span class="field-icon" aria-hidden="true">📍</span>
+          <label class="sr-only" for="field-location">Location</label>
+          <input
+            id="field-location"
+            class="field-location"
+            type="text"
+            placeholder="Where? (optional)"
+            autocomplete="off"
+            aria-label="Location"
+            maxlength="100"
+          />
+        </div>
+
+        <div class="card-footer">
+          <span class="signature-label">Signed:</span>
+          <label class="sr-only" for="field-added-by">Your name</label>
+          <input
+            id="field-added-by"
+            class="signature-input"
+            type="text"
+            placeholder="Your name"
+            autocomplete="off"
+            aria-label="Your name"
+            maxlength="40"
+          />
+          <span class="signature-icon" aria-hidden="true">✍️</span>
+        </div>
+
+        <button id="submit-btn" class="send-btn" disabled aria-label="Send idea">
+          Send it ✉️
+        </button>
+        <p id="submit-error" class="submit-error" style="display:none" role="alert"></p>
+      </div>
+    </section>
+
+    <!-- ANIMATION OVERLAY -->
+    <div id="animation-overlay" class="anim-overlay" role="status" aria-live="polite"
+         aria-label="Sending your idea" style="display:none;">
+
+      <!-- Envelope SVG -->
+      <div id="anim-envelope" class="anim-envelope" aria-hidden="true">
+        <svg width="80" height="56" viewBox="0 0 80 56" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <!-- envelope body -->
+          <rect x="1" y="1" width="78" height="54" rx="5"
+                fill="#E8D5B7" stroke="#3D2B1F" stroke-width="1.5"/>
+          <!-- flap left diagonal -->
+          <line x1="1" y1="1" x2="40" y2="30" stroke="#3D2B1F" stroke-width="1.5"/>
+          <!-- flap right diagonal -->
+          <line x1="79" y1="1" x2="40" y2="30" stroke="#3D2B1F" stroke-width="1.5"/>
+          <!-- bottom diagonals -->
+          <line x1="1"  y1="55" x2="36" y2="33" stroke="#3D2B1F" stroke-width="1.5"/>
+          <line x1="79" y1="55" x2="44" y2="33" stroke="#3D2B1F" stroke-width="1.5"/>
+          <!-- wax seal heart -->
+          <text x="40" y="22" font-size="14" text-anchor="middle"
+                dominant-baseline="middle">❤️</text>
+        </svg>
+      </div>
+
+      <!-- Ballot Box SVG -->
+      <div id="anim-box" class="anim-ballot-box" aria-hidden="true">
+        <svg width="100" height="120" viewBox="0 0 100 120" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <!-- box body -->
+          <rect x="5" y="20" width="90" height="95" rx="6"
+                fill="#FDF6EC" stroke="#3D2B1F" stroke-width="2"/>
+          <!-- slot top -->
+          <rect x="30" y="20" width="40" height="8" rx="2"
+                fill="#3D2B1F"/>
+          <!-- slot highlight -->
+          <rect x="32" y="22" width="36" height="4" rx="1"
+                fill="#5a3e30" opacity="0.5"/>
+          <!-- box lid / top panel -->
+          <rect x="5" y="20" width="90" height="22" rx="6"
+                fill="#E8D5B7" stroke="#3D2B1F" stroke-width="2"/>
+          <!-- re-draw slot over lid -->
+          <rect x="30" y="24" width="40" height="8" rx="2"
+                fill="#3D2B1F"/>
+          <!-- heart left -->
+          <text x="22" y="82" font-size="14" text-anchor="middle"
+                dominant-baseline="middle" fill="#F2C4CE">♥</text>
+          <!-- heart right -->
+          <text x="78" y="82" font-size="14" text-anchor="middle"
+                dominant-baseline="middle" fill="#F2C4CE">♥</text>
+          <!-- mail icon / front label -->
+          <text x="50" y="85" font-size="18" text-anchor="middle"
+                dominant-baseline="middle">💌</text>
+        </svg>
+      </div>
+
+      <!-- Hearts container -->
+      <div id="anim-hearts" class="anim-hearts" aria-hidden="true"></div>
+    </div>
+
+    <!-- TOP PICKS -->
+    <section id="top-picks-section">
+      <h2 class="section-header">❤️ Top Picks</h2>
+      <div id="top-picks-list" class="card-list"></div>
+      <p id="top-picks-empty" class="empty-state" style="display:none">
+        Heart an idea to pin it here
+      </p>
+    </section>
+
+    <!-- THE BOX -->
+    <section id="the-box-section">
+      <h2 class="section-header">📮 The Box</h2>
+      <div id="the-box-list" class="card-list"></div>
+      <p id="the-box-empty" class="empty-state" style="display:none">
+        The box is empty — drop an idea above!
+      </p>
+    </section>
+
+    <!-- ARCHIVE -->
+    <section id="archive-section">
+      <h2 class="section-header archive-toggle" id="archive-toggle"
+          role="button" tabindex="0" aria-expanded="false"
+          aria-controls="archive-list">
+        ✅ Archive <span id="archive-count"></span>
+        <span class="archive-chevron" aria-hidden="true">▾</span>
+      </h2>
+      <div id="archive-list" class="card-list archive-list" style="display:none"></div>
+      <p id="archive-empty" class="empty-state" style="display:none">
+        Nothing archived yet — you've got dates to go on!
+      </p>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ── SUPABASE CONFIG ────────────────────────────────────────────
+    const SUPABASE_URL     = 'https://jcswgkrhejpomdhazude.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_c3q6cvJ8oRrMKzeK5qMIew_vwiffcSi';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ── STATE ──────────────────────────────────────────────────────
+    let allIdeas = [];
+    let selectedCost     = null;
+    let selectedCategory = null;
+    let archiveOpen      = false;
+    let animating        = false;
+
+    // ── DOM REFS ───────────────────────────────────────────────────
+    const titleInput    = document.getElementById('field-title');
+    const descInput     = document.getElementById('field-description');
+    const locationInput = document.getElementById('field-location');
+    const addedByInput  = document.getElementById('field-added-by');
+    const submitBtn     = document.getElementById('submit-btn');
+    const submitError   = document.getElementById('submit-error');
+    const watermark     = document.getElementById('form-watermark');
+    const overlay       = document.getElementById('animation-overlay');
+    const animEnvelope  = document.getElementById('anim-envelope');
+    const animBox       = document.getElementById('anim-box');
+    const animHearts    = document.getElementById('anim-hearts');
+    const archiveToggle = document.getElementById('archive-toggle');
+
+    // ── USERNAME ───────────────────────────────────────────────────
+    function getUsername() { return localStorage.getItem('mattevy_username') || ''; }
+    function saveUsername(name) {
+      if (name && name.trim()) localStorage.setItem('mattevy_username', name.trim());
+    }
+
+    // ── CHIP SELECTION ─────────────────────────────────────────────
+    function setupChips(groupId, onSelect) {
+      const group = document.getElementById(groupId);
+      group.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const val = chip.dataset.value;
+          const wasSelected = chip.classList.contains('selected');
+          group.querySelectorAll('.chip').forEach(c => {
+            c.classList.remove('selected');
+            c.setAttribute('aria-checked', 'false');
+          });
+          if (!wasSelected) {
+            chip.classList.add('selected');
+            chip.setAttribute('aria-checked', 'true');
+            onSelect(val);
+          } else {
+            onSelect(null);
+          }
+        });
+      });
+    }
+
+    // ── FETCH IDEAS ────────────────────────────────────────────────
+    async function fetchIdeas() {
+      document.getElementById('app-main').classList.add('loading');
+      try {
+        const { data, error } = await sb
+          .from('ideas')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        allIdeas = data || [];
+        renderBoard(allIdeas);
+      } catch (err) {
+        // Silently fail — board stays as-is
+      } finally {
+        document.getElementById('app-main').classList.remove('loading');
+      }
+    }
+
+    // ── SUBMIT IDEA ────────────────────────────────────────────────
+    async function submitIdea(ideaData) {
+      const { error } = await sb.from('ideas').insert([ideaData]);
+      if (error) throw error;
+    }
+
+    // ── TOGGLE HEART ───────────────────────────────────────────────
+    async function toggleHeart(id, currentState) {
+      // Optimistic update
+      allIdeas = allIdeas.map(i =>
+        i.id === id ? { ...i, hearted: !currentState } : i
+      );
+      renderBoard(allIdeas);
+      try {
+        const { error } = await sb
+          .from('ideas')
+          .update({ hearted: !currentState })
+          .eq('id', id);
+        if (error) throw error;
+        await fetchIdeas();
+      } catch {
+        // Roll back optimistic update
+        await fetchIdeas();
+      }
+    }
+
+    // ── MARK DONE ─────────────────────────────────────────────────
+    async function markDone(id) {
+      try {
+        const { error } = await sb
+          .from('ideas')
+          .update({ done: true })
+          .eq('id', id);
+        if (error) throw error;
+        await fetchIdeas();
+      } catch {
+        await fetchIdeas();
+      }
+    }
+
+    // ── DELETE IDEA ────────────────────────────────────────────────
+    async function deleteIdea(id) {
+      try {
+        const { error } = await sb.from('ideas').delete().eq('id', id);
+        if (error) throw error;
+        await fetchIdeas();
+      } catch {
+        await fetchIdeas();
+      }
+    }
+
+    // ── RENDER CARD ────────────────────────────────────────────────
+    function renderCard(idea, isNew) {
+      const div = document.createElement('div');
+      div.className = 'postcard idea-card' + (isNew ? ' card-appearing' : '');
+      div.dataset.id = idea.id;
+      div.dataset.category = idea.category || '';
+
+      const heartIcon = idea.hearted ? '❤️' : '🤍';
+      const heartLabel = idea.hearted ? 'Remove from Top Picks' : 'Add to Top Picks';
+
+      let metaHtml = '';
+      if (idea.location) {
+        metaHtml += `<span class="card-meta-item" aria-label="Location">📍 ${escHtml(idea.location)}</span>`;
+      }
+      if (idea.cost) {
+        metaHtml += `<span class="card-meta-item" aria-label="Cost: ${escHtml(idea.cost)}">💰 ${escHtml(idea.cost)}</span>`;
+      }
+      if (idea.category) {
+        metaHtml += `<span class="card-meta-item" aria-label="Category: ${escHtml(idea.category)}">🏷️ ${escHtml(idea.category)}</span>`;
+      }
+
+      div.innerHTML = `
+        <div class="card-header">
+          <h3 class="card-title">${escHtml(idea.title)}</h3>
+          <div class="card-actions">
+            <button class="card-action-btn btn-heart"
+                    aria-label="${heartLabel}"
+                    data-id="${idea.id}"
+                    data-hearted="${idea.hearted}">${heartIcon}</button>
+            ${!idea.done ? `<button class="card-action-btn btn-done"
+                    aria-label="Mark as done"
+                    data-id="${idea.id}">✓</button>` : ''}
+            <button class="card-action-btn btn-delete"
+                    aria-label="Delete idea"
+                    data-id="${idea.id}">✕</button>
+          </div>
+        </div>
+        ${idea.description ? `<p class="card-description">${escHtml(idea.description)}</p>` : ''}
+        ${metaHtml ? `<div class="card-meta">${metaHtml}</div>` : ''}
+        ${idea.added_by ? `<p class="card-signature">— ${escHtml(idea.added_by)}</p>` : ''}
+        <div class="delete-confirm-container" style="display:none;"></div>
+      `;
+
+      // Heart button
+      div.querySelector('.btn-heart').addEventListener('click', function () {
+        const hearted = this.dataset.hearted === 'true';
+        toggleHeart(idea.id, hearted);
+      });
+
+      // Done button
+      const doneBtn = div.querySelector('.btn-done');
+      if (doneBtn) {
+        doneBtn.addEventListener('click', function () {
+          // Small pulse animation on the card
+          div.style.transition = 'transform 0.15s';
+          div.style.transform = 'scale(0.97)';
+          setTimeout(() => { div.style.transform = ''; markDone(idea.id); }, 150);
+        });
+      }
+
+      // Delete button — inline confirm
+      div.querySelector('.btn-delete').addEventListener('click', function () {
+        const container = div.querySelector('.delete-confirm-container');
+        if (container.style.display !== 'none') return;
+        container.style.display = 'flex';
+        container.innerHTML = `
+          <div class="delete-confirm">
+            Remove this idea?
+            <button class="yes-btn" aria-label="Yes, delete">Yes</button>
+            <button class="no-btn" aria-label="No, keep it">No</button>
+          </div>
+        `;
+        container.querySelector('.yes-btn').addEventListener('click', () => deleteIdea(idea.id));
+        container.querySelector('.no-btn').addEventListener('click', () => {
+          container.style.display = 'none';
+          container.innerHTML = '';
+        });
+      });
+
+      return div;
+    }
+
+    // ── RENDER BOARD ───────────────────────────────────────────────
+    function renderBoard(ideas) {
+      const topPicksList  = document.getElementById('top-picks-list');
+      const theBoxList    = document.getElementById('the-box-list');
+      const archiveList   = document.getElementById('archive-list');
+      const topEmpty      = document.getElementById('top-picks-empty');
+      const boxEmpty      = document.getElementById('the-box-empty');
+      const archiveEmpty  = document.getElementById('archive-empty');
+      const archiveCount  = document.getElementById('archive-count');
+
+      const topPicks = ideas.filter(i => i.hearted && !i.done);
+      const theBox   = ideas.filter(i => !i.hearted && !i.done);
+      const archived = ideas.filter(i => i.done);
+
+      // Top Picks
+      topPicksList.innerHTML = '';
+      topPicks.forEach(idea => topPicksList.appendChild(renderCard(idea)));
+      topEmpty.style.display  = topPicks.length === 0 ? '' : 'none';
+
+      // The Box
+      theBoxList.innerHTML = '';
+      theBox.forEach(idea => theBoxList.appendChild(renderCard(idea)));
+      boxEmpty.style.display = theBox.length === 0 ? '' : 'none';
+
+      // Archive
+      archiveList.innerHTML = '';
+      archived.forEach(idea => archiveList.appendChild(renderCard(idea)));
+      archiveCount.textContent = archived.length > 0 ? `(${archived.length})` : '';
+      archiveEmpty.style.display = archived.length === 0 && archiveOpen ? '' : 'none';
+    }
+
+    // ── SUBMISSION ANIMATION ───────────────────────────────────────
+    function playSubmitAnimation(onComplete) {
+      const card = document.getElementById('submission-card');
+
+      // Step 1: Lock inputs (0ms)
+      setFormDisabled(true);
+      animating = true;
+
+      setTimeout(() => {
+        // Step 2: Card fold (100ms – 400ms)
+        card.style.transition = 'none';
+        card.style.animation = 'cardFold 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards';
+
+        setTimeout(() => {
+          // Scale down
+          card.style.animation = 'none';
+          card.style.transform = 'scale(0.6) translateY(-10px)';
+          card.style.transition = 'transform 100ms ease';
+          card.style.opacity = '0.5';
+
+          // Step 3: Show overlay + envelope (400ms)
+          setTimeout(() => {
+            card.style.opacity = '0';
+
+            // Show overlay
+            overlay.style.display = 'flex';
+            // Position envelope above the box
+            positionAnimElements();
+
+            requestAnimationFrame(() => {
+              overlay.classList.add('visible');
+
+              // Pulse envelope
+              animEnvelope.style.animation = 'envelopePulse 200ms ease 150ms';
+
+              // Step 4: Drop envelope into box (650ms)
+              setTimeout(() => {
+                animEnvelope.style.animation = 'envelopeDrop 350ms ease-in forwards';
+
+                // Box pulse when envelope arrives
+                setTimeout(() => {
+                  animBox.style.animation = 'boxPulse 100ms ease';
+
+                  // Spawn floating hearts
+                  spawnHearts();
+
+                  // Step 5: Fade out overlay and refresh (1000ms)
+                  setTimeout(() => {
+                    overlay.style.transition = 'opacity 0.2s ease';
+                    overlay.classList.remove('visible');
+                    setTimeout(() => {
+                      overlay.style.display = 'none';
+                      overlay.style.transition = '';
+                      animEnvelope.style.animation = '';
+                      animBox.style.animation = '';
+                      card.style.animation = '';
+                      card.style.transform = '';
+                      card.style.opacity = '';
+                      card.style.transition = '';
+                      animating = false;
+                      onComplete();
+                    }, 200);
+                  }, 350);
+                }, 250);
+              }, 400);
+            });
+          }, 100);
+        }, 300);
+      }, 100);
+    }
+
+    function positionAnimElements() {
+      // Center envelope above the box
+      const boxRect  = animBox.getBoundingClientRect();
+      const overlayRect = overlay.getBoundingClientRect();
+      animEnvelope.style.position = 'absolute';
+      animEnvelope.style.left = (boxRect.left - overlayRect.left + boxRect.width / 2 - 40) + 'px';
+      animEnvelope.style.top  = (boxRect.top  - overlayRect.top  - 80) + 'px';
+    }
+
+    function spawnHearts() {
+      animHearts.innerHTML = '';
+      const count = 5;
+      for (let i = 0; i < count; i++) {
+        const h = document.createElement('span');
+        h.className = 'floating-heart';
+        h.textContent = '❤️';
+        const boxRect = animBox.getBoundingClientRect();
+        const overlayRect = overlay.getBoundingClientRect();
+        const baseX = boxRect.left - overlayRect.left + boxRect.width / 2;
+        const offsetX = (Math.random() - 0.5) * 60;
+        const dur = 600 + Math.random() * 300;
+        const delay = Math.random() * 200;
+        h.style.left = (baseX + offsetX) + 'px';
+        h.style.top  = (boxRect.top - overlayRect.top + boxRect.height * 0.5) + 'px';
+        h.style.animationDuration = dur + 'ms';
+        h.style.animationDelay   = delay + 'ms';
+        animHearts.appendChild(h);
+      }
+    }
+
+    // ── RESET FORM ─────────────────────────────────────────────────
+    function resetForm() {
+      titleInput.value    = '';
+      descInput.value     = '';
+      locationInput.value = '';
+      selectedCost     = null;
+      selectedCategory = null;
+      document.querySelectorAll('#cost-chips .chip, #category-chips .chip').forEach(c => {
+        c.classList.remove('selected');
+        c.setAttribute('aria-checked', 'false');
+      });
+      addedByInput.value = getUsername();
+      submitBtn.disabled = true;
+      watermark.style.opacity = '';
+      submitError.style.display = 'none';
+      setFormDisabled(false);
+      titleInput.focus();
+    }
+
+    function setFormDisabled(disabled) {
+      [titleInput, descInput, locationInput, addedByInput].forEach(el => {
+        el.disabled = disabled;
+      });
+      document.querySelectorAll('#cost-chips .chip, #category-chips .chip').forEach(c => {
+        c.style.pointerEvents = disabled ? 'none' : '';
+      });
+      submitBtn.disabled = disabled;
+    }
+
+    // ── ESCAPE HTML ────────────────────────────────────────────────
+    function escHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // ── ARCHIVE TOGGLE ─────────────────────────────────────────────
+    function setupArchiveToggle() {
+      function toggle() {
+        archiveOpen = !archiveOpen;
+        const archiveList  = document.getElementById('archive-list');
+        const archiveEmpty = document.getElementById('archive-empty');
+        const archived = allIdeas.filter(i => i.done);
+
+        archiveToggle.classList.toggle('expanded', archiveOpen);
+        archiveToggle.setAttribute('aria-expanded', archiveOpen ? 'true' : 'false');
+
+        if (archiveOpen) {
+          archiveList.style.display = '';
+          archiveEmpty.style.display = archived.length === 0 ? '' : 'none';
+        } else {
+          archiveList.style.display = 'none';
+          archiveEmpty.style.display = 'none';
+        }
+      }
+
+      archiveToggle.addEventListener('click', toggle);
+      archiveToggle.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    }
+
+    // ── WATERMARK HIDE ─────────────────────────────────────────────
+    function setupWatermark() {
+      titleInput.addEventListener('input', () => {
+        watermark.style.opacity = titleInput.value.length > 0 ? '0' : '';
+        submitBtn.disabled = titleInput.value.trim().length === 0;
+      });
+    }
+
+    // ── SUBMIT HANDLER ─────────────────────────────────────────────
+    function setupSubmit() {
+      submitBtn.addEventListener('click', async () => {
+        if (animating) return;
+        const title = titleInput.value.trim();
+        if (!title) return;
+
+        const name = addedByInput.value.trim();
+        saveUsername(name);
+
+        const ideaData = {
+          title,
+          description: descInput.value.trim() || null,
+          cost: selectedCost || null,
+          category: selectedCategory || null,
+          location: locationInput.value.trim() || null,
+          added_by: name || null,
+          hearted: false,
+          done: false,
+        };
+
+        submitError.style.display = 'none';
+
+        playSubmitAnimation(async () => {
+          try {
+            await submitIdea(ideaData);
+            await fetchIdeas();
+            resetForm();
+          } catch {
+            submitError.textContent = "Couldn't send — check your connection and try again 💌";
+            submitError.style.display = '';
+            setFormDisabled(false);
+            animating = false;
+          }
+        });
+      });
+    }
+
+    // ── INIT ───────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // Pre-fill name
+      const saved = getUsername();
+      if (saved) addedByInput.value = saved;
+
+      // Setup chip groups
+      setupChips('cost-chips',     val => { selectedCost     = val; });
+      setupChips('category-chips', val => { selectedCategory = val; });
+
+      // Setup interactions
+      setupWatermark();
+      setupSubmit();
+      setupArchiveToggle();
+
+      // Load ideas
+      fetchIdeas();
+    });
+  </script>
+</body>
+</html>
