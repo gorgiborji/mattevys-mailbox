@@ -39,7 +39,7 @@ export function switchTab(tabName, direction) {
     }
   });
 
-  // After animation completes
+  // After animation completes (matches 400ms CSS duration)
   setTimeout(() => {
     outPane.classList.remove('active', 'slide-out-left', 'slide-out-right');
     inPane.classList.remove('slide-in-left', 'slide-in-right');
@@ -52,7 +52,7 @@ export function switchTab(tabName, direction) {
       const archived = store.get().ideas.filter(i => i.done);
       $.archiveEmpty.style.display = archived.length === 0 ? '' : 'none';
     }
-  }, 300);
+  }, 400);
 }
 
 function tabOrder(name) {

@@ -1,5 +1,6 @@
 import { $ } from './dom.js';
 import { setFormDisabled, setAnimating } from '../actions/ui.js';
+import { iconHeartFilled } from './icons.js';
 
 export function playSubmitAnimation(onComplete) {
   const card = $.submissionCard;
@@ -86,7 +87,7 @@ export function spawnHearts() {
   for (let i = 0; i < count; i++) {
     const h = document.createElement('span');
     h.className = 'floating-heart';
-    h.textContent = '\u2764\uFE0F';
+    h.innerHTML = iconHeartFilled(18);
     const boxRect     = $.animBox.getBoundingClientRect();
     const overlayRect = $.overlay.getBoundingClientRect();
     const baseX   = boxRect.left - overlayRect.left + boxRect.width / 2;

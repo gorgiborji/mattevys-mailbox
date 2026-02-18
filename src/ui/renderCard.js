@@ -1,12 +1,5 @@
 import { escapeHtml } from '../utils/escapeHtml.js';
-
-const CATEGORY_EMOJIS = {
-  Food: '🍽️',
-  Outdoors: '🌿',
-  Cozy: '🕯️',
-  Adventure: '⚡',
-  Culture: '🎭',
-};
+import { categoryIcon, iconHeart, iconHeartFilled, iconX, iconMapPin, iconDollarSign, iconTag } from './icons.js';
 
 export function renderCard(idea, isNew = false) {
   const div = document.createElement('div');
@@ -14,28 +7,28 @@ export function renderCard(idea, isNew = false) {
   div.dataset.id = idea.id;
   div.dataset.category = idea.category || '';
 
-  const heartIcon  = idea.hearted ? '\u2764\uFE0F' : '\uD83E\uDD0D';
+  const heartIcon  = idea.hearted ? iconHeartFilled() : iconHeart();
   const heartLabel = idea.hearted ? 'Remove from Top Picks' : 'Add to Top Picks';
   const cat = idea.category || '';
-  const catEmoji = CATEGORY_EMOJIS[cat] || '';
+  const catIcon = categoryIcon(cat);
 
   // Category gradient header band
   let gradientHeader = '';
   if (cat) {
     gradientHeader = `<div class="card-category-band" data-category="${escapeHtml(cat)}">
-      <span class="category-band-emoji">${catEmoji}</span>
+      <span class="category-band-icon">${catIcon}</span>
     </div>`;
   }
 
   let metaHtml = '';
   if (idea.location) {
-    metaHtml += `<span class="card-meta-item" aria-label="Location">\uD83D\uDCCD ${escapeHtml(idea.location)}</span>`;
+    metaHtml += `<span class="card-meta-item" aria-label="Location">${iconMapPin()} ${escapeHtml(idea.location)}</span>`;
   }
   if (idea.cost) {
-    metaHtml += `<span class="card-meta-item" aria-label="Cost: ${escapeHtml(idea.cost)}">\uD83D\uDCB0 ${escapeHtml(idea.cost)}</span>`;
+    metaHtml += `<span class="card-meta-item" aria-label="Cost: ${escapeHtml(idea.cost)}">${iconDollarSign()} ${escapeHtml(idea.cost)}</span>`;
   }
   if (idea.category) {
-    metaHtml += `<span class="card-meta-item" aria-label="Category: ${escapeHtml(idea.category)}">\uD83C\uDFF7\uFE0F ${escapeHtml(idea.category)}</span>`;
+    metaHtml += `<span class="card-meta-item" aria-label="Category: ${escapeHtml(idea.category)}">${iconTag()} ${escapeHtml(idea.category)}</span>`;
   }
 
   // SVG checkmark for done button
@@ -60,7 +53,7 @@ export function renderCard(idea, isNew = false) {
           ${doneBtn}
           <button class="card-action-btn btn-delete"
                   aria-label="Delete idea"
-                  data-id="${idea.id}">\u2715</button>
+                  data-id="${idea.id}">${iconX()}</button>
         </div>
       </div>
       ${idea.description ? `<p class="card-description">${escapeHtml(idea.description)}</p>` : ''}
