@@ -14,7 +14,7 @@ A shared date-idea mailbox for Matt & Evy. Drop ideas, heart favorites, mark dat
 ```
 index.html                    # Structure: header, 3 tab panes, overlays, bottom nav
 src/
-├── main.js                   # Entry: store subscriptions, bind events, fetch data
+├── main.js                   # Entry: store subscriptions, bind events, inject icons, fetch data
 ├── config.js                 # Supabase client (URL + anon key)
 ├── actions/
 │   ├── ideas.js              # CRUD: fetchIdeas, createIdea, toggleHeart, markDone, removeIdea
@@ -26,12 +26,14 @@ src/
 │   └── selectors.js          # selectTopPicks, selectBox, selectArchive
 ├── ui/
 │   ├── dom.js                # All getElementById refs as `$` object
+│   ├── icons.js              # Lucide-based SVG icon functions (all icons as inline SVG strings)
+│   ├── injectIcons.js        # Injects SVG icons into static HTML placeholder elements on load
 │   ├── renderBoard.js        # Renders all 3 card lists with filter + skeleton logic
-│   ├── renderCard.js         # Single card DOM builder (gradient band, SVG checkmark)
+│   ├── renderCard.js         # Single card DOM builder (gradient band, SVG icons, checkmark)
 │   ├── bindEvents.js         # All event wiring (cards, submit, tabs, wizard, swipe, filters, surprise)
 │   ├── animation.js          # Submission envelope-drop animation
 │   ├── chips.js              # Chip toggle (cost/category radio buttons)
-│   ├── tabs.js               # Bottom tab navigation with slide transitions
+│   ├── tabs.js               # Bottom tab navigation with slide transitions (400ms ease-out)
 │   ├── wizard.js             # 3-step form wizard (title → vibe → details)
 │   ├── swipe.js              # Touch swipe gestures (left=delete, right=heart)
 │   ├── surpriseMe.js         # Random idea FAB + full-screen modal
@@ -72,19 +74,21 @@ UI state includes: `selectedCost, selectedCategory, archiveOpen, animating, load
 - **DOM refs**: All elements cached in `dom.js` as `$` — import `{ $ }` to access
 - **No routing**: Tab-based SPA. `tabs.js` manages pane visibility with CSS slide animations
 - **Touch-only swipe**: `swipe.js` checks `ontouchstart` before binding — no desktop interference
+- **SVG icons**: All icons are Lucide-based inline SVGs via `icons.js` — no emoji, no icon fonts. Icons inherit `currentColor` for automatic theming. Static HTML icons injected on load by `injectIcons.js`; dynamic icons (cards, modals) imported directly in their modules
 
 ## Design System
 
 - **Fonts**: Caveat (headers), Lora (descriptions), DM Sans (body)
-- **Palette**: cream `#FDF6EC`, blush `#F2C4CE`, sage `#B7C9B0`, lavender `#D4C5E2`, ink `#3D2B1F`
+- **Palette**: cream `#FDF6EC`, blush `#F2C4CE`, blush-dark `#E8A8B8`, sage `#B7C9B0`, lavender `#D4C5E2`, ink `#3D2B1F`, ink-faint `#A48B7C`
 - **Category colors**: Food `#F4A261`, Outdoors `#81B29A`, Cozy `#E8C5E5`, Adventure `#F4D35E`, Culture `#B5C7D3`
-- **Spring easing**: `cubic-bezier(0.34, 1.56, 0.64, 1)` used throughout as `--spring`
-- **Aesthetic**: Paper texture overlay, postcard lines, envelope animation, wax-seal stamp
+- **Easing**: `--ease-out: cubic-bezier(0.22, 1, 0.36, 1)` for tab/card/wizard transitions; `--spring: cubic-bezier(0.34, 1.56, 0.64, 1)` reserved for bouncy micro-interactions (hearts, stamps, dots)
+- **Icons**: Lucide SVG icons (stroke-based, 24x24 viewBox, `currentColor`) — no Apple emojis
+- **Aesthetic**: Paper texture overlay, postcard lines, envelope animation, wax-seal stamp, backdrop-filter on overlays
 
 ## UI Features
 
-1. **Bottom tab bar** — Write / The Box / Archive with slide transitions
-2. **3-step wizard** — Form split into title → category+cost → location+signature
+1. **Bottom tab bar** — Write / The Box / Archive with 400ms ease-out slide transitions
+2. **3-step wizard** — Form split into title → category+cost → location+signature (padding on steps, not viewport)
 3. **Category gradient bands** — Full-width color header on cards (replaces 4px left stripe)
 4. **Springy heart** — Scale 1.4x bounce animation on heart toggle
 5. **SVG checkmark draw** — Animated stroke on done button
