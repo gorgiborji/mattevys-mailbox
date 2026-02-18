@@ -97,126 +97,142 @@
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   VERSION 1: "MIDNIGHT" — Dark Mode Date Night
+   VERSION 1: "CINEMA" — Immersive Full-Bleed Experience
    ═══════════════════════════════════════════════════════════════════
 
-   Design philosophy: Flips the warm paper aesthetic to an intimate
-   evening atmosphere. Dark backgrounds make card content "float" and
-   feel immersive. Warm amber/gold accent replaces blush pink for a
-   more sophisticated, date-night feel. Glass-morphism cards add depth
-   and modernity. Better contrast for readability in low-light.
+   Inspired by: Spotify, Apple Music, TikTok, Netflix
 
-   Key improvements over original:
-   - Dark mode is easier on eyes for evening use (when you're actually
-     planning dates)
-   - Glass cards create visual depth hierarchy
-   - Amber accent is gender-neutral while staying warm/romantic
-   - Glow effects on interactive elements provide clear affordance
-   - Higher contrast ratio for better accessibility
+   STRUCTURAL changes (not just colors):
+   - Header completely HIDDEN for maximum content immersion
+   - Category band: 38px → 100px tall hero banner with overlay title
+   - Tab bar: detached floating glass pill (inset from edges, rounded)
+   - Cards: 20px radius, no borders, deep elevation shadows
+   - Full-width card layout (no side margins on mobile)
+   - Background: dark cinematic with gradient mesh
+   - Filter pills: connected segmented control, not individual pills
+   - Cards feel like content "screens" you scroll through
    ═══════════════════════════════════════════════════════════════════ */
 
 body.version-1 {
-  --cream:       #121218;
-  --blush:       #D4954A;
-  --blush-dark:  #C07B2E;
-  --sage:        #6ECB9A;
-  --sage-light:  #3A5C48;
-  --lavender:    #8B7BA8;
-  --ink:         #E8E4DF;
-  --ink-light:   #B0A89E;
-  --ink-faint:   #7A736B;
-  --stamp-red:   #E85D4A;
-  --envelope:    #2A2630;
-  --card-bg:     rgba(30, 28, 36, 0.85);
-  --border:      rgba(255, 255, 255, 0.08);
-  --border-light: rgba(255, 255, 255, 0.05);
-  --shadow:      rgba(0, 0, 0, 0.25);
-  --shadow-lg:   rgba(0, 0, 0, 0.4);
+  --cream:       #0D0D14;
+  --blush:       #FF6B8A;
+  --blush-dark:  #E8507A;
+  --sage:        #4ECCA3;
+  --sage-light:  #2D5A48;
+  --lavender:    #A78BFA;
+  --ink:         #F5F0EB;
+  --ink-light:   #C0B8AE;
+  --ink-faint:   #6B6460;
+  --stamp-red:   #FF5252;
+  --envelope:    #1A1A24;
+  --card-bg:     rgba(26, 26, 36, 0.85);
+  --border:      rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.04);
+  --shadow:      rgba(0, 0, 0, 0.3);
+  --shadow-lg:   rgba(0, 0, 0, 0.5);
 
-  --cat-food:      #E8935A;
-  --cat-outdoors:  #5DAF82;
-  --cat-cozy:      #B88DB8;
-  --cat-adventure: #D4B84A;
-  --cat-culture:   #7A9DB8;
+  --cat-food:      #FF8C42;
+  --cat-outdoors:  #4ECCA3;
+  --cat-cozy:      #C084FC;
+  --cat-adventure: #FBBF24;
+  --cat-culture:   #60A5FA;
 
-  background-color: #121218;
-  color: #E8E4DF;
+  background: #0D0D14;
+  color: #F5F0EB;
 }
 
-/* Remove paper texture in dark mode */
+/* Gradient mesh background instead of paper texture */
 body.version-1::before {
   background-image: none;
-  background: radial-gradient(ellipse at 20% 50%, rgba(212, 149, 74, 0.04) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 20%, rgba(107, 76, 154, 0.03) 0%, transparent 60%);
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 70%, rgba(255, 107, 138, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(78, 204, 163, 0.04) 0%, transparent 40%);
   opacity: 1;
 }
 
-/* Header */
-body.version-1 .postmark-decoration circle,
-body.version-1 .postmark-decoration line {
-  stroke: rgba(212, 149, 74, 0.15);
+/* ── STRUCTURAL: Hide header completely ── */
+body.version-1 #app-header {
+  display: none;
 }
 
-body.version-1 .app-title {
-  color: #E8E4DF;
-  text-shadow: 0 0 40px rgba(212, 149, 74, 0.15);
+/* ── STRUCTURAL: Full-bleed content area ── */
+body.version-1 #app-main {
+  max-width: 520px;
+  padding: 8px 0 24px;
 }
 
-body.version-1 .app-title .icon-inline {
-  color: #D4954A;
+body.version-1 #app-main section {
+  padding: 0;
 }
 
-body.version-1 .header-divider {
-  color: rgba(255, 255, 255, 0.1);
-}
-
-/* Glass-morphism cards */
-body.version-1 .postcard {
-  background: rgba(30, 28, 36, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background-image: none;
-}
-
-body.version-1 .postcard:hover {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-/* Category bands — darker, subtler */
+/* ── STRUCTURAL: Large hero category bands (100px) ── */
 body.version-1 .card-category-band {
-  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+  height: 100px;
+  padding: 0 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding-bottom: 14px;
+  border-radius: 20px 20px 0 0;
 }
 
 body.version-1 .card-category-band[data-category="Food"] {
-  background: linear-gradient(135deg, rgba(232, 147, 90, 0.35) 0%, rgba(232, 147, 90, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(255, 140, 66, 0.5) 0%, rgba(255, 140, 66, 0.08) 100%);
 }
 body.version-1 .card-category-band[data-category="Outdoors"] {
-  background: linear-gradient(135deg, rgba(93, 175, 130, 0.35) 0%, rgba(93, 175, 130, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(78, 204, 163, 0.5) 0%, rgba(78, 204, 163, 0.08) 100%);
 }
 body.version-1 .card-category-band[data-category="Cozy"] {
-  background: linear-gradient(135deg, rgba(184, 141, 184, 0.35) 0%, rgba(184, 141, 184, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.5) 0%, rgba(192, 132, 252, 0.08) 100%);
 }
 body.version-1 .card-category-band[data-category="Adventure"] {
-  background: linear-gradient(135deg, rgba(212, 184, 74, 0.35) 0%, rgba(212, 184, 74, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.5) 0%, rgba(251, 191, 36, 0.08) 100%);
 }
 body.version-1 .card-category-band[data-category="Culture"] {
-  background: linear-gradient(135deg, rgba(122, 157, 184, 0.35) 0%, rgba(122, 157, 184, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.5) 0%, rgba(96, 165, 250, 0.08) 100%);
 }
 
 body.version-1 .category-band-icon {
-  color: rgba(232, 228, 223, 0.5);
+  color: rgba(245, 240, 235, 0.7);
+}
+
+body.version-1 .category-band-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ── STRUCTURAL: Cards — borderless, deep elevation ── */
+body.version-1 .postcard {
+  background: rgba(26, 26, 36, 0.8);
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-image: none;
+  margin: 0 8px;
+}
+
+body.version-1 .postcard:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Card content */
+body.version-1 .card-body {
+  padding: 20px 24px;
+}
+
 body.version-1 .card-title {
-  color: #E8E4DF;
+  font-size: 24px;
+  color: #F5F0EB;
+  font-weight: 700;
 }
 
 body.version-1 .card-description {
-  color: #B0A89E;
+  color: #C0B8AE;
+  font-size: 14px;
 }
 
 body.version-1 .card-meta {
@@ -224,267 +240,311 @@ body.version-1 .card-meta {
 }
 
 body.version-1 .card-meta-item {
-  color: #7A736B;
+  color: #6B6460;
 }
 
 body.version-1 .card-signature {
-  color: #7A736B;
+  color: #6B6460;
 }
 
-/* Card actions — glow on hover */
+/* Card actions */
 body.version-1 .card-action-btn {
-  color: #7A736B;
+  color: #6B6460;
+  border-radius: 12px;
 }
 
 body.version-1 .card-action-btn:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: #B0A89E;
+  color: #C0B8AE;
 }
 
 body.version-1 .btn-heart {
-  color: #D4954A;
+  color: #FF6B8A;
 }
 
 body.version-1 .btn-heart[data-hearted="true"] {
-  color: #E85D4A;
-  filter: drop-shadow(0 0 6px rgba(232, 93, 74, 0.3));
+  color: #FF5252;
+  filter: drop-shadow(0 0 8px rgba(255, 82, 82, 0.4));
 }
 
 body.version-1 .btn-heart:hover {
-  background: rgba(212, 149, 74, 0.12);
-  color: #E85D4A;
+  background: rgba(255, 107, 138, 0.15);
+  color: #FF5252;
 }
 
-/* Tab bar — dark glass */
+/* ── STRUCTURAL: Floating glass pill tab bar ── */
 body.version-1 .tab-bar {
-  background: rgba(18, 18, 24, 0.9);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+  bottom: 16px;
+  left: 20px;
+  right: 20px;
+  border-radius: 22px;
+  border-top: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 13, 20, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: 10px 8px;
+}
+
+body.version-1 .tab-bar-btn {
+  border-radius: 16px;
+  padding: 8px 24px;
+}
+
+body.version-1 .tab-bar-btn.active {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 body.version-1 .tab-bar-icon {
-  color: #7A736B;
+  color: #6B6460;
 }
 
 body.version-1 .tab-bar-label {
-  color: #7A736B;
+  color: #6B6460;
 }
 
 body.version-1 .tab-bar-btn.active .tab-bar-icon {
-  color: #D4954A;
+  color: #FF6B8A;
 }
 
 body.version-1 .tab-bar-btn.active .tab-bar-label {
-  color: #D4954A;
+  color: #FF6B8A;
 }
 
 body.version-1 .tab-bar-btn.active::after {
-  background: #D4954A;
-  box-shadow: 0 0 8px rgba(212, 149, 74, 0.4);
+  display: none;
 }
 
-/* Submission card */
+/* Increase body bottom padding for floating tab bar */
+body.version-1 {
+  padding-bottom: 100px;
+}
+
+/* Card list — wider gaps for immersive feel */
+body.version-1 .card-list {
+  gap: 20px;
+}
+
+/* No rotation — clean stacking */
+body.version-1 #the-box-list .postcard:nth-child(odd),
+body.version-1 #the-box-list .postcard:nth-child(even) {
+  transform: none;
+}
+
+/* ── STRUCTURAL: Filter pills as connected segments ── */
+body.version-1 .filter-pills-bar {
+  background: linear-gradient(to bottom, #0D0D14 80%, transparent);
+  gap: 4px;
+  padding: 14px 8px;
+}
+
+body.version-1 .filter-pill {
+  color: #6B6460;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  font-size: 12px;
+  padding: 6px 14px;
+}
+
+body.version-1 .filter-pill:hover {
+  border-color: rgba(255, 107, 138, 0.3);
+  background: rgba(255, 107, 138, 0.06);
+}
+
+body.version-1 .filter-pill.active {
+  background: #FF6B8A;
+  color: #0D0D14;
+  border-color: #FF6B8A;
+  font-weight: 500;
+}
+
+/* Section headers */
+body.version-1 .section-header {
+  color: #F5F0EB;
+  padding: 0 12px;
+}
+
+body.version-1 .section-header .icon-inline {
+  color: #FF6B8A;
+}
+
+body.version-1 .section-label {
+  color: #C0B8AE;
+  padding: 0 12px;
+}
+
+body.version-1 .section-label .icon-inline {
+  color: #6B6460;
+}
+
+body.version-1 .empty-state {
+  color: #4A4540;
+}
+
+/* Submission card — immersive dark glass */
 body.version-1 .submission-card {
-  background: rgba(30, 28, 36, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(26, 26, 36, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   background-image: none;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin: 0 8px;
+}
+
+body.version-1 #submission-section {
+  padding: 0 8px;
 }
 
 body.version-1 .submission-card .card-watermark {
-  color: #E8E4DF;
-  opacity: 0.025;
+  color: #F5F0EB;
+  opacity: 0.02;
 }
 
 body.version-1 .field-title,
 body.version-1 .field-description,
 body.version-1 .field-location,
 body.version-1 .signature-input {
-  color: #E8E4DF;
+  color: #F5F0EB;
 }
 
 body.version-1 .field-title::placeholder,
 body.version-1 .field-description::placeholder,
 body.version-1 .field-location::placeholder,
 body.version-1 .signature-input::placeholder {
-  color: #5A544E;
+  color: #4A4540;
 }
 
 body.version-1 .field-title:focus,
 body.version-1 .field-description:focus,
 body.version-1 .field-location:focus,
 body.version-1 .signature-input:focus {
-  border-bottom-color: #D4954A;
+  border-bottom-color: #FF6B8A;
 }
 
 /* Wizard */
+body.version-1 .wizard-progress {
+  padding: 0 12px;
+}
+
 body.version-1 .wizard-track {
   background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
 }
 
 body.version-1 .wizard-fill {
-  background: linear-gradient(90deg, #D4954A, #C07B2E);
+  background: linear-gradient(90deg, #FF6B8A, #A78BFA);
+  border-radius: 4px;
 }
 
 body.version-1 .wizard-dot {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 body.version-1 .wizard-dot.active {
-  background: #D4954A;
-  box-shadow: 0 0 8px rgba(212, 149, 74, 0.3);
+  background: #FF6B8A;
+  box-shadow: 0 0 12px rgba(255, 107, 138, 0.4);
+}
+
+body.version-1 .wizard-step-label {
+  color: #6B6460;
 }
 
 body.version-1 .wizard-next,
 body.version-1 .wizard-send {
-  background: #D4954A;
-  color: #121218;
-  box-shadow: 0 2px 12px rgba(212, 149, 74, 0.3);
+  background: linear-gradient(135deg, #FF6B8A, #E8507A);
+  color: #FFFFFF;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(255, 107, 138, 0.3);
 }
 
 body.version-1 .wizard-next:hover,
 body.version-1 .wizard-send:not(:disabled):hover {
-  background: #C07B2E;
-  box-shadow: 0 4px 18px rgba(212, 149, 74, 0.4);
+  background: linear-gradient(135deg, #E8507A, #D04060);
+  box-shadow: 0 6px 24px rgba(255, 107, 138, 0.4);
 }
 
 body.version-1 .wizard-prev {
-  color: #7A736B;
+  color: #6B6460;
 }
 
 body.version-1 .wizard-prev:hover {
-  color: #B0A89E;
+  color: #C0B8AE;
 }
 
-/* Chips — amber tinted */
+/* Chips */
 body.version-1 .chip {
-  color: #B0A89E;
+  color: #C0B8AE;
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
 }
 
 body.version-1 .chip:hover {
-  border-color: rgba(212, 149, 74, 0.3);
-  background: rgba(212, 149, 74, 0.08);
+  border-color: rgba(255, 107, 138, 0.3);
+  background: rgba(255, 107, 138, 0.08);
 }
 
 body.version-1 .chip.selected {
-  background: #D4954A;
-  color: #121218;
-  border-color: #D4954A;
-  box-shadow: 0 2px 8px rgba(212, 149, 74, 0.25);
+  background: #FF6B8A;
+  color: #0D0D14;
+  border-color: #FF6B8A;
 }
 
-/* Filter pills */
-body.version-1 .filter-pills-bar {
-  background: linear-gradient(to bottom, #121218 80%, transparent);
-}
-
-body.version-1 .filter-pill {
-  color: #B0A89E;
-  background: rgba(30, 28, 36, 0.8);
-  border-color: rgba(255, 255, 255, 0.06);
-}
-
-body.version-1 .filter-pill:hover {
-  border-color: rgba(212, 149, 74, 0.3);
-  background: rgba(212, 149, 74, 0.08);
-}
-
-body.version-1 .filter-pill.active {
-  background: #D4954A;
-  color: #121218;
-  border-color: #D4954A;
-  box-shadow: 0 2px 8px rgba(212, 149, 74, 0.3);
-}
-
-/* Section headers */
-body.version-1 .section-header {
-  color: #E8E4DF;
-}
-
-body.version-1 .section-header .icon-inline {
-  color: #D4954A;
-}
-
-body.version-1 .section-label {
-  color: #B0A89E;
-}
-
-body.version-1 .section-label .icon-inline {
-  color: #7A736B;
-}
-
-body.version-1 .empty-state {
-  color: #5A544E;
-}
-
-/* Surprise FAB — glowing amber */
+/* Surprise FAB */
 body.version-1 .surprise-fab {
-  background: #D4954A;
-  border-color: rgba(30, 28, 36, 0.8);
-  color: #121218;
-  box-shadow: 0 4px 20px rgba(212, 149, 74, 0.35);
+  background: linear-gradient(135deg, #FF6B8A, #A78BFA);
+  border: 2px solid rgba(13, 13, 20, 0.6);
+  color: #FFFFFF;
+  box-shadow: 0 6px 24px rgba(255, 107, 138, 0.35);
+  bottom: 112px;
 }
 
 body.version-1 .surprise-fab:hover {
-  box-shadow: 0 6px 28px rgba(212, 149, 74, 0.5);
+  box-shadow: 0 8px 32px rgba(255, 107, 138, 0.5);
 }
 
 /* Surprise modal */
 body.version-1 .surprise-modal-overlay {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 body.version-1 .surprise-modal {
-  background: rgba(30, 28, 36, 0.95);
+  background: rgba(26, 26, 36, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
 }
 
-body.version-1 .surprise-title {
-  color: #E8E4DF;
-}
-
-body.version-1 .surprise-desc {
-  color: #B0A89E;
-}
-
-body.version-1 .surprise-meta {
-  color: #7A736B;
-}
+body.version-1 .surprise-title { color: #F5F0EB; }
+body.version-1 .surprise-desc { color: #C0B8AE; }
+body.version-1 .surprise-meta { color: #6B6460; }
+body.version-1 .surprise-emoji { color: #FF6B8A; }
 
 body.version-1 .surprise-cta {
-  background: #D4954A;
-  color: #121218;
-  box-shadow: 0 2px 12px rgba(212, 149, 74, 0.3);
+  background: linear-gradient(135deg, #FF6B8A, #A78BFA);
+  color: #FFFFFF;
+  border-radius: 16px;
 }
 
 body.version-1 .surprise-cta:hover {
-  background: #C07B2E;
+  background: linear-gradient(135deg, #E8507A, #8B5CF6);
 }
 
-body.version-1 .surprise-close {
-  color: #7A736B;
-}
-
-body.version-1 .surprise-close:hover {
-  color: #E8E4DF;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-body.version-1 .surprise-emoji {
-  color: #D4954A;
-}
+body.version-1 .surprise-close { color: #6B6460; }
+body.version-1 .surprise-close:hover { color: #F5F0EB; background: rgba(255,255,255,0.06); }
 
 /* Skeleton */
 body.version-1 .skeleton-card {
-  background: rgba(30, 28, 36, 0.6);
-  border-color: rgba(255, 255, 255, 0.04);
+  background: rgba(26, 26, 36, 0.6);
+  border: none;
+  border-radius: 20px;
+  margin: 0 8px;
 }
 
 body.version-1 .skeleton-line,
@@ -492,1206 +552,1087 @@ body.version-1 .skeleton-circle {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Stamp overlay */
-body.version-1 .stamp-overlay {
-  background: rgba(18, 18, 24, 0.8);
-}
-
-/* Anim overlay */
-body.version-1 .anim-overlay {
-  background: rgba(18, 18, 24, 0.95);
-}
+/* Overlays */
+body.version-1 .stamp-overlay { background: rgba(13, 13, 20, 0.85); }
+body.version-1 .anim-overlay { background: rgba(13, 13, 20, 0.95); }
 
 /* Delete confirm */
-body.version-1 .delete-confirm {
-  color: #E85D4A;
-}
+body.version-1 .delete-confirm { color: #FF5252; }
+body.version-1 .delete-confirm button { border-color: #FF5252; color: #FF5252; }
+body.version-1 .delete-confirm button:hover { background: #FF5252; color: #0D0D14; }
+body.version-1 .delete-confirm .no-btn { border-color: rgba(255,255,255,0.1); color: #C0B8AE; }
+body.version-1 .delete-confirm .no-btn:hover { background: rgba(255,255,255,0.08); color: #F5F0EB; }
 
-body.version-1 .delete-confirm button {
-  border-color: #E85D4A;
-  color: #E85D4A;
-}
+/* Archive — dimmed */
+body.version-1 #archive-list .postcard { opacity: 0.5; filter: grayscale(20%); }
 
-body.version-1 .delete-confirm button:hover {
-  background: #E85D4A;
-  color: #121218;
-}
-
-body.version-1 .delete-confirm .no-btn {
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #B0A89E;
-}
-
-body.version-1 .delete-confirm .no-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #E8E4DF;
-}
-
-/* Archive — slight glass, not desaturated */
-body.version-1 #archive-list .postcard {
-  opacity: 0.55;
-  filter: grayscale(15%);
-}
-
-/* Box rotation — subtle in dark mode */
-body.version-1 #the-box-list .postcard:nth-child(odd)  { transform: rotate(-0.3deg); }
-body.version-1 #the-box-list .postcard:nth-child(even) { transform: rotate(0.3deg); }
-
-/* Version switcher in dark mode */
+/* Version switcher — dark glass */
 body.version-1 .version-toggle {
-  background: rgba(30, 28, 36, 0.9);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #7A736B;
+  background: rgba(26, 26, 36, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #6B6460;
 }
 
 body.version-1 .version-panel {
-  background: rgba(30, 28, 36, 0.95);
+  background: rgba(26, 26, 36, 0.95);
   border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-body.version-1 .version-panel-title {
-  color: #7A736B;
-}
+body.version-1 .version-panel-title { color: #6B6460; }
+body.version-1 .version-btn { color: #C0B8AE; }
+body.version-1 .version-btn:hover { background: rgba(255, 255, 255, 0.06); }
+body.version-1 .version-btn.active { background: #FF6B8A; color: #0D0D14; border-color: #E8507A; }
 
-body.version-1 .version-btn {
-  color: #B0A89E;
-}
-
-body.version-1 .version-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-body.version-1 .version-btn.active {
-  background: #D4954A;
-  color: #121218;
-  border-color: #C07B2E;
-}
+/* Signature + footer in dark */
+body.version-1 .signature-label { color: #6B6460; }
+body.version-1 .field-icon { color: #6B6460; }
+body.version-1 .signature-icon { color: #6B6460; }
+body.version-1 .header-divider { color: rgba(255,255,255,0.06); }
+body.version-1 .field-divider { border-top-color: rgba(255,255,255,0.06); }
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   VERSION 2: "BOTANICAL" — Organic & Lush
+   VERSION 2: "WORKSPACE" — Dense Productivity Grid
    ═══════════════════════════════════════════════════════════════════
 
-   Design philosophy: Nature-inspired warmth with a more tactile,
-   organic feel. Draws on botanical garden aesthetics — soft greens,
-   warm roses, natural textures. Cards feel like pressed flowers in a
-   journal rather than postcards.
+   Inspired by: Linear, Notion, Vercel, Things 3
 
-   Key improvements over original:
-   - Larger touch targets and spacing improve mobile usability
-   - Softer, sage-tinted background is easier on the eyes
-   - Dual accent (deep rose + forest green) adds visual richness
-     without being busy
-   - More generous typography breathes better
-   - Deeper card shadows create stronger depth hierarchy
-   - Neumorphism-lite cards feel more tactile and touchable
-   - Warmer color temperature throughout feels more inviting
+   STRUCTURAL changes (not just colors):
+   - Tab bar MOVES TO TOP as minimal segmented text links
+   - Card list becomes a 2-COLUMN GRID
+   - Cards are compact tiles: thin 3px category stripe, no gradient band
+   - Category band icon HIDDEN — replaced by thin top border-color
+   - Card descriptions TRUNCATED to 1 line (ellipsis overflow)
+   - System font stack everywhere (no Caveat/Lora)
+   - Sharp 6px corners, thin 1px borders, zero shadows
+   - Tight 8px gap between cards
+   - Header minimized to tiny single line
+   - No paper texture, no rotation, no decorative elements
+   - Monospace-style cost/category display
    ═══════════════════════════════════════════════════════════════════ */
 
 body.version-2 {
-  --cream:       #EEF0E5;
-  --blush:       #C44569;
-  --blush-dark:  #A83853;
-  --sage:        #6B9080;
-  --sage-light:  #A4C3B2;
-  --lavender:    #CCB7D8;
-  --ink:         #2D3A2E;
-  --ink-light:   #556B5A;
-  --ink-faint:   #8A9E8F;
-  --stamp-red:   #C44569;
-  --envelope:    #D5DCCA;
-  --card-bg:     #F5F7EE;
-  --border:      #C8D1BB;
-  --border-light: #DCE2D2;
-  --shadow:      rgba(45, 58, 46, 0.08);
-  --shadow-lg:   rgba(45, 58, 46, 0.14);
+  --cream:       #FAFAFA;
+  --blush:       #5E5CE6;
+  --blush-dark:  #4B49B6;
+  --sage:        #30A46C;
+  --sage-light:  #DDF3E4;
+  --lavender:    #D4C5E2;
+  --ink:         #171717;
+  --ink-light:   #525252;
+  --ink-faint:   #A3A3A3;
+  --stamp-red:   #E5484D;
+  --envelope:    #F5F5F5;
+  --card-bg:     #FFFFFF;
+  --border:      #E5E5E5;
+  --border-light: #F0F0F0;
+  --shadow:      transparent;
+  --shadow-lg:   transparent;
 
-  --cat-food:      #E07B54;
-  --cat-outdoors:  #5E9B72;
-  --cat-cozy:      #C9889F;
-  --cat-adventure: #D4A843;
-  --cat-culture:   #7A9BB0;
+  --cat-food:      #E8590C;
+  --cat-outdoors:  #30A46C;
+  --cat-cozy:      #AB4ABA;
+  --cat-adventure: #E5A000;
+  --cat-culture:   #3E63DD;
 
-  background-color: #EEF0E5;
-  color: #2D3A2E;
+  background-color: #FAFAFA;
+  color: #171717;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+
+  /* STRUCTURAL: Flip padding — top space for tab bar, no bottom space */
+  padding-top: 60px;
+  padding-bottom: 16px;
 }
 
-/* Botanical texture — subtle leaf pattern */
+/* No texture */
 body.version-2::before {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.5;
+  display: none;
 }
 
-/* Header — lush feel */
-body.version-2 .postmark-decoration circle,
-body.version-2 .postmark-decoration line {
-  stroke: #C8D1BB;
+/* ── STRUCTURAL: Tab bar moves to TOP ── */
+body.version-2 .tab-bar {
+  position: fixed;
+  top: 0;
+  bottom: auto;
+  left: 0;
+  right: 0;
+  border-top: none;
+  border-bottom: 1px solid #E5E5E5;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(250, 250, 250, 0.85);
+  padding: 0;
+  height: 48px;
+  z-index: 900;
+}
+
+body.version-2 .tab-bar-btn {
+  padding: 14px 24px;
+  border-radius: 0;
+  gap: 0;
+}
+
+/* Hide tab icons — text-only navigation */
+body.version-2 .tab-bar-icon {
+  display: none;
+}
+
+body.version-2 .tab-bar-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #A3A3A3;
+  letter-spacing: 0.01em;
+}
+
+body.version-2 .tab-bar-btn.active .tab-bar-label {
+  color: #171717;
+  font-weight: 600;
+}
+
+body.version-2 .tab-bar-btn.active::after {
+  top: auto;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: #5E5CE6;
+  width: 100%;
+}
+
+/* ── STRUCTURAL: Minimized header — tiny single line ── */
+body.version-2 #app-header {
+  padding: 10px 16px 6px;
+  text-align: left;
+}
+
+body.version-2 .postmark-decoration {
+  display: none;
 }
 
 body.version-2 .app-title {
-  color: #2D3A2E;
-  font-size: 2.3rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: #171717;
 }
 
 body.version-2 .app-title .icon-inline {
-  color: #C44569;
+  color: #5E5CE6;
 }
 
-body.version-2 .app-tagline {
-  color: #556B5A;
-  font-size: 14px;
-}
-
-body.version-2 .app-names {
-  color: #8A9E8F;
-}
-
+body.version-2 .app-tagline,
+body.version-2 .app-names,
 body.version-2 .header-divider {
-  color: #C8D1BB;
+  display: none;
 }
 
-/* Neumorphism-lite cards */
+/* ── STRUCTURAL: Narrow main container ── */
+body.version-2 #app-main {
+  max-width: 560px;
+  padding: 0 12px 16px;
+}
+
+/* ── STRUCTURAL: 2-column card grid ── */
+body.version-2 .card-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* ── STRUCTURAL: Category band → thin 3px stripe ── */
+body.version-2 .card-category-band {
+  height: 3px;
+  padding: 0;
+  border-radius: 6px 6px 0 0;
+  gap: 0;
+}
+
+body.version-2 .card-category-band[data-category="Food"]      { background: #E8590C; }
+body.version-2 .card-category-band[data-category="Outdoors"]   { background: #30A46C; }
+body.version-2 .card-category-band[data-category="Cozy"]       { background: #AB4ABA; }
+body.version-2 .card-category-band[data-category="Adventure"]  { background: #E5A000; }
+body.version-2 .card-category-band[data-category="Culture"]    { background: #3E63DD; }
+
+body.version-2 .category-band-icon {
+  display: none;
+}
+
+/* ── STRUCTURAL: Compact tile cards ── */
 body.version-2 .postcard {
-  background: #F5F7EE;
-  border: none;
-  border-radius: 18px;
-  box-shadow: 6px 6px 16px rgba(45, 58, 46, 0.1),
-              -4px -4px 12px rgba(255, 255, 255, 0.7);
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  box-shadow: none;
   background-image: none;
 }
 
 body.version-2 .postcard:hover {
-  box-shadow: 8px 8px 24px rgba(45, 58, 46, 0.14),
-              -4px -4px 16px rgba(255, 255, 255, 0.8);
-  transform: translateY(-2px);
+  border-color: #D4D4D4;
+  box-shadow: none;
+  transform: none;
 }
 
-/* Category bands — softer, more rounded */
-body.version-2 .card-category-band {
-  height: 42px;
-  border-radius: 18px 18px 0 0;
-}
-
-body.version-2 .card-category-band[data-category="Food"] {
-  background: linear-gradient(135deg, rgba(224, 123, 84, 0.25) 0%, rgba(224, 123, 84, 0.05) 100%);
-}
-body.version-2 .card-category-band[data-category="Outdoors"] {
-  background: linear-gradient(135deg, rgba(94, 155, 114, 0.25) 0%, rgba(94, 155, 114, 0.05) 100%);
-}
-body.version-2 .card-category-band[data-category="Cozy"] {
-  background: linear-gradient(135deg, rgba(201, 136, 159, 0.3) 0%, rgba(201, 136, 159, 0.05) 100%);
-}
-body.version-2 .card-category-band[data-category="Adventure"] {
-  background: linear-gradient(135deg, rgba(212, 168, 67, 0.25) 0%, rgba(212, 168, 67, 0.05) 100%);
-}
-body.version-2 .card-category-band[data-category="Culture"] {
-  background: linear-gradient(135deg, rgba(122, 155, 176, 0.25) 0%, rgba(122, 155, 176, 0.05) 100%);
-}
-
-body.version-2 .category-band-icon {
-  color: rgba(45, 58, 46, 0.45);
-}
-
-/* Card content — more generous */
 body.version-2 .card-body {
-  padding: 18px 22px;
+  padding: 10px 12px;
 }
 
 body.version-2 .card-title {
-  font-size: 22px;
-  color: #2D3A2E;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #171717;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
+/* STRUCTURAL: Truncate descriptions to 1 line in compact view */
 body.version-2 .card-description {
-  font-size: 14px;
-  color: #556B5A;
-  margin-top: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-style: normal;
+  font-size: 11px;
+  color: #737373;
+  line-height: 1.4;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 body.version-2 .card-meta {
-  border-top-color: rgba(200, 209, 187, 0.4);
-  gap: 14px;
-  margin-top: 12px;
-  padding-top: 12px;
+  border-top: 1px solid #F0F0F0;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 6px;
 }
 
 body.version-2 .card-meta-item {
-  color: #8A9E8F;
-  font-size: 12.5px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 10px;
+  color: #A3A3A3;
+  letter-spacing: 0.02em;
 }
 
 body.version-2 .card-signature {
-  color: #8A9E8F;
-  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-style: normal;
+  font-size: 10px;
+  color: #A3A3A3;
+  font-weight: 500;
+  margin-top: 6px;
 }
 
-/* Card actions — rose accent */
+/* Compact actions */
 body.version-2 .card-action-btn {
-  color: #8A9E8F;
-  border-radius: 10px;
-  min-width: 38px;
-  min-height: 38px;
+  color: #D4D4D4;
+  border-radius: 4px;
+  min-width: 26px;
+  min-height: 26px;
+  padding: 2px;
+}
+
+body.version-2 .card-action-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
 body.version-2 .card-action-btn:hover {
-  background: rgba(45, 58, 46, 0.06);
-  color: #556B5A;
+  background: #F5F5F5;
+  color: #737373;
 }
 
 body.version-2 .btn-heart {
-  color: #C44569;
+  color: #D4D4D4;
 }
 
 body.version-2 .btn-heart[data-hearted="true"] {
-  color: #C44569;
-  filter: drop-shadow(0 0 4px rgba(196, 69, 105, 0.25));
+  color: #E5484D;
 }
 
 body.version-2 .btn-heart:hover {
-  background: rgba(196, 69, 105, 0.1);
-  color: #A83853;
+  background: rgba(229, 72, 77, 0.06);
+  color: #E5484D;
 }
 
-/* Tab bar — organic feel */
-body.version-2 .tab-bar {
-  background: #F5F7EE;
-  border-top: 1px solid #DCE2D2;
-  box-shadow: 0 -2px 16px rgba(45, 58, 46, 0.06);
+/* No card rotation */
+body.version-2 #the-box-list .postcard:nth-child(odd),
+body.version-2 #the-box-list .postcard:nth-child(even) {
+  transform: none;
 }
 
-body.version-2 .tab-bar-icon {
-  color: #8A9E8F;
+/* Section headers — small, structured */
+body.version-2 .section-header {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #A3A3A3;
+  margin-bottom: 8px;
 }
 
-body.version-2 .tab-bar-label {
-  color: #8A9E8F;
+body.version-2 .section-header .icon-inline {
+  color: #5E5CE6;
 }
 
-body.version-2 .tab-bar-btn.active .tab-bar-icon {
-  color: #6B9080;
+body.version-2 .section-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #A3A3A3;
 }
 
-body.version-2 .tab-bar-btn.active .tab-bar-label {
-  color: #6B9080;
+body.version-2 .section-label .icon-inline {
+  color: #D4D4D4;
 }
 
-body.version-2 .tab-bar-btn.active::after {
-  background: #6B9080;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
+body.version-2 .empty-state {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-style: normal;
+  font-size: 12px;
+  color: #D4D4D4;
+  grid-column: 1 / -1;
 }
 
-/* Submission card — neumorphism */
+body.version-2 #archive-count {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  color: #A3A3A3;
+}
+
+/* Filter pills — minimal underline tabs */
+body.version-2 .filter-pills-bar {
+  background: linear-gradient(to bottom, #FAFAFA 85%, transparent);
+  gap: 2px;
+  padding: 10px 0;
+}
+
+body.version-2 .filter-pill {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #A3A3A3;
+  background: transparent;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  padding: 4px 10px;
+}
+
+body.version-2 .filter-pill:hover {
+  border-color: #5E5CE6;
+  background: transparent;
+  color: #5E5CE6;
+}
+
+body.version-2 .filter-pill.active {
+  background: #5E5CE6;
+  color: #FFFFFF;
+  border-color: #5E5CE6;
+  box-shadow: none;
+}
+
+/* Submission card — flat, efficient */
 body.version-2 .submission-card {
-  border: none;
-  box-shadow: 6px 6px 16px rgba(45, 58, 46, 0.1),
-              -4px -4px 12px rgba(255, 255, 255, 0.7);
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  box-shadow: none;
   background-image: none;
 }
 
 body.version-2 .submission-card .card-watermark {
-  color: #2D3A2E;
-  opacity: 0.025;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+}
+
+body.version-2 .submission-card .stamp-decoration {
+  display: none;
 }
 
 body.version-2 .field-title {
-  font-size: 24px;
-  color: #2D3A2E;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-body.version-2 .field-title::placeholder { color: #8A9E8F; }
-body.version-2 .field-description::placeholder { color: #8A9E8F; }
-body.version-2 .field-location::placeholder { color: #8A9E8F; }
-body.version-2 .signature-input::placeholder { color: #8A9E8F; }
+body.version-2 .field-title::placeholder { font-style: normal; font-weight: 400; color: #D4D4D4; }
+body.version-2 .field-description { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-style: normal; font-size: 13px; }
+body.version-2 .field-description::placeholder { color: #D4D4D4; }
+body.version-2 .field-location { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; }
+body.version-2 .field-location::placeholder { color: #D4D4D4; }
+body.version-2 .signature-input { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-style: normal; font-size: 13px; font-weight: 500; }
+body.version-2 .signature-input::placeholder { color: #D4D4D4; }
 
 body.version-2 .field-title:focus,
 body.version-2 .field-description:focus,
 body.version-2 .field-location:focus,
 body.version-2 .signature-input:focus {
-  border-bottom-color: #6B9080;
+  border-bottom-color: #5E5CE6;
 }
 
-/* Wizard — forest green */
+body.version-2 .signature-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Wizard */
 body.version-2 .wizard-track {
-  background: #DCE2D2;
+  height: 2px;
+  background: #E5E5E5;
+  border-radius: 0;
 }
 
 body.version-2 .wizard-fill {
-  background: linear-gradient(90deg, #6B9080, #5E9B72);
+  background: #5E5CE6;
+  border-radius: 0;
 }
 
 body.version-2 .wizard-dot {
-  background: #C8D1BB;
+  width: 6px;
+  height: 6px;
+  background: #E5E5E5;
 }
 
 body.version-2 .wizard-dot.active {
-  background: #6B9080;
+  background: #5E5CE6;
+}
+
+body.version-2 .wizard-step-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #A3A3A3;
 }
 
 body.version-2 .wizard-next,
 body.version-2 .wizard-send {
-  background: #C44569;
-  color: white;
-  border-radius: 12px;
-  padding: 12px 24px;
-  box-shadow: 0 3px 12px rgba(196, 69, 105, 0.25);
+  background: #5E5CE6;
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 8px 18px;
+  box-shadow: none;
+  font-weight: 500;
+  font-size: 13px;
 }
 
 body.version-2 .wizard-next:hover,
 body.version-2 .wizard-send:not(:disabled):hover {
-  background: #A83853;
-  box-shadow: 0 5px 18px rgba(196, 69, 105, 0.35);
+  background: #4B49B6;
 }
 
-body.version-2 .wizard-prev {
-  color: #8A9E8F;
-}
+body.version-2 .wizard-prev { color: #A3A3A3; }
+body.version-2 .wizard-prev:hover { color: #171717; }
 
-body.version-2 .wizard-prev:hover {
-  color: #556B5A;
-}
-
-/* Chips — botanical */
+/* Chips — tiny, structured */
 body.version-2 .chip {
-  color: #556B5A;
-  background: #EEF0E5;
-  border-color: #C8D1BB;
-  border-radius: 12px;
-  padding: 7px 14px;
-  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  color: #525252;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  padding: 4px 10px;
 }
 
 body.version-2 .chip:hover {
-  border-color: #6B9080;
-  background: rgba(107, 144, 128, 0.08);
+  border-color: #5E5CE6;
 }
 
 body.version-2 .chip.selected {
-  background: #6B9080;
-  color: white;
-  border-color: #6B9080;
-  box-shadow: 0 2px 8px rgba(107, 144, 128, 0.25);
+  background: #5E5CE6;
+  color: #FFFFFF;
+  border-color: #5E5CE6;
+  box-shadow: none;
 }
 
-/* Filter pills — botanical */
-body.version-2 .filter-pills-bar {
-  background: linear-gradient(to bottom, #EEF0E5 80%, transparent);
-}
-
-body.version-2 .filter-pill {
-  color: #556B5A;
-  background: #F5F7EE;
-  border-color: #DCE2D2;
-  border-radius: 12px;
-  padding: 8px 18px;
-  font-size: 13px;
-}
-
-body.version-2 .filter-pill:hover {
-  border-color: #6B9080;
-  background: rgba(107, 144, 128, 0.06);
-}
-
-body.version-2 .filter-pill.active {
-  background: #6B9080;
-  color: white;
-  border-color: #6B9080;
-  box-shadow: 0 2px 8px rgba(107, 144, 128, 0.25);
-}
-
-/* Section headers */
-body.version-2 .section-header {
-  color: #2D3A2E;
-  font-size: 22px;
-}
-
-body.version-2 .section-header .icon-inline {
-  color: #C44569;
-}
-
-body.version-2 .section-label {
-  color: #556B5A;
-  font-size: 19px;
-}
-
-body.version-2 .section-label .icon-inline {
-  color: #8A9E8F;
-}
-
-body.version-2 .empty-state {
-  color: #8A9E8F;
-  font-size: 15px;
-}
-
-/* Surprise FAB — deep rose */
+/* Surprise FAB — positioned for top-nav layout */
 body.version-2 .surprise-fab {
-  background: #C44569;
-  border-color: #F5F7EE;
-  color: white;
-  box-shadow: 0 4px 20px rgba(196, 69, 105, 0.3);
-  width: 58px;
-  height: 58px;
+  background: #5E5CE6;
+  border: none;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(94, 92, 230, 0.25);
+  width: 44px;
+  height: 44px;
+  bottom: 20px;
+  animation: none;
 }
 
 body.version-2 .surprise-fab:hover {
-  box-shadow: 0 6px 28px rgba(196, 69, 105, 0.4);
+  background: #4B49B6;
+  box-shadow: 0 4px 16px rgba(94, 92, 230, 0.35);
 }
 
-/* Surprise modal — botanical */
-body.version-2 .surprise-modal-overlay {
-  background: rgba(45, 58, 46, 0.4);
-}
+/* Surprise modal */
+body.version-2 .surprise-modal-overlay { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+body.version-2 .surprise-modal { background: #FFFFFF; border-radius: 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12); }
+body.version-2 .surprise-title { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 20px; color: #171717; }
+body.version-2 .surprise-desc { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-style: normal; font-size: 13px; color: #525252; }
+body.version-2 .surprise-meta { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 11px; color: #A3A3A3; }
+body.version-2 .surprise-emoji { color: #5E5CE6; }
+body.version-2 .surprise-cta { background: #5E5CE6; color: #FFFFFF; border-radius: 6px; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; box-shadow: none; }
+body.version-2 .surprise-cta:hover { background: #4B49B6; }
+body.version-2 .surprise-close { color: #A3A3A3; }
+body.version-2 .surprise-close:hover { color: #171717; background: #F5F5F5; }
 
-body.version-2 .surprise-modal {
-  background: #F5F7EE;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(45, 58, 46, 0.2);
-}
-
-body.version-2 .surprise-title {
-  color: #2D3A2E;
-}
-
-body.version-2 .surprise-desc {
-  color: #556B5A;
-}
-
-body.version-2 .surprise-meta {
-  color: #8A9E8F;
-}
-
-body.version-2 .surprise-cta {
-  background: #C44569;
-  color: white;
-  border-radius: 14px;
-  box-shadow: 0 3px 14px rgba(196, 69, 105, 0.25);
-}
-
-body.version-2 .surprise-cta:hover {
-  background: #A83853;
-}
-
-body.version-2 .surprise-close {
-  color: #8A9E8F;
-}
-
-body.version-2 .surprise-close:hover {
-  color: #2D3A2E;
-  background: rgba(45, 58, 46, 0.06);
-}
-
-body.version-2 .surprise-emoji {
-  color: #C44569;
-}
-
-/* Skeleton — botanical */
-body.version-2 .skeleton-card {
-  background: #F5F7EE;
-  border: none;
-  border-radius: 18px;
-  box-shadow: 6px 6px 16px rgba(45, 58, 46, 0.06),
-              -4px -4px 12px rgba(255, 255, 255, 0.5);
-}
-
-body.version-2 .skeleton-line,
-body.version-2 .skeleton-circle {
-  background: #DCE2D2;
-}
+/* Skeleton */
+body.version-2 .skeleton-card { background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 6px; }
+body.version-2 .skeleton-line, body.version-2 .skeleton-circle { background: #F0F0F0; }
 
 /* Stamp overlay */
-body.version-2 .stamp-overlay {
-  background: rgba(238, 240, 229, 0.75);
-}
-
-/* Box card rotation — slightly more playful */
-body.version-2 #the-box-list .postcard:nth-child(odd)  { transform: rotate(-0.6deg); }
-body.version-2 #the-box-list .postcard:nth-child(even) { transform: rotate(0.5deg); }
-
-/* Card list gap — more spacious */
-body.version-2 .card-list {
-  gap: 20px;
-}
+body.version-2 .stamp-overlay { background: rgba(250, 250, 250, 0.85); }
+body.version-2 .anim-overlay { background: rgba(250, 250, 250, 0.96); }
 
 /* Archive */
-body.version-2 #archive-list .postcard {
-  opacity: 0.6;
-  filter: grayscale(20%) saturate(0.9);
-}
+body.version-2 #archive-list .postcard { opacity: 0.5; filter: none; }
 
 /* Delete confirm */
-body.version-2 .delete-confirm button {
-  border-radius: 8px;
-}
+body.version-2 .delete-confirm { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-size: 11px; }
+body.version-2 .delete-confirm button { border-radius: 4px; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; }
 
-/* Version switcher in botanical */
-body.version-2 .version-toggle {
-  background: #F5F7EE;
-  border-color: #C8D1BB;
-  color: #8A9E8F;
-}
-
-body.version-2 .version-panel {
-  background: #F5F7EE;
-  border-color: #DCE2D2;
-}
-
-body.version-2 .version-panel-title {
-  color: #8A9E8F;
-}
-
-body.version-2 .version-btn {
-  color: #556B5A;
-}
-
-body.version-2 .version-btn:hover {
-  background: rgba(107, 144, 128, 0.08);
-}
-
-body.version-2 .version-btn.active {
-  background: #C44569;
-  color: white;
-  border-color: #A83853;
-}
+/* Version switcher */
+body.version-2 .version-toggle { background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 6px; color: #A3A3A3; }
+body.version-2 .version-panel { background: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 6px; }
+body.version-2 .version-panel-title { color: #A3A3A3; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; }
+body.version-2 .version-btn { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; color: #525252; border-radius: 4px; }
+body.version-2 .version-btn:hover { background: #F5F5F5; }
+body.version-2 .version-btn.active { background: #5E5CE6; color: #FFFFFF; border-color: #4B49B6; }
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   VERSION 3: "MINIMAL" — Swiss-Inspired Clarity
+   VERSION 3: "BUBBLY" — Playful, Rounded & Colorful
    ═══════════════════════════════════════════════════════════════════
 
-   Design philosophy: Strips away all decorative elements in favor of
-   pure content clarity. Inspired by Swiss/International Typographic
-   Style — emphasis on grids, clean lines, and strong type hierarchy.
-   Every pixel earns its place.
+   Inspired by: Duolingo, Headspace, Figma, Arc Browser
 
-   Key improvements over original:
-   - Zero visual noise — no paper texture, no gradients, no rotation
-   - System font stack loads instantly (no web font latency)
-   - Sharp geometric borders create clear content boundaries
-   - Compact density shows more ideas without scrolling
-   - Strong type hierarchy (size + weight) replaces decorative fonts
-   - Monochrome palette with single red accent reduces cognitive load
-   - Tighter spacing is more scannable for quick browsing
-   - Removed border-radius for a structured, editorial feel
+   STRUCTURAL changes (not just colors):
+   - Cards have THICK 2.5px colored borders matching their category
+   - VERY rounded corners everywhere (24px cards, 20px tab bar)
+   - Category band: 48px tall with large centered icon
+   - Tab bar: colorful filled pill backgrounds on active state
+   - Background: warm animated pastel gradient
+   - Oversized 20px gaps between cards
+   - Large touch targets, big padded cards
+   - Playful bouncy typography at 24px card titles
+   - Confetti-colored accents scattered through the UI
+   - Fun gradient wizard buttons
    ═══════════════════════════════════════════════════════════════════ */
 
 body.version-3 {
-  --cream:       #FFFFFF;
-  --blush:       #E63946;
-  --blush-dark:  #C5303C;
-  --sage:        #2D6A4F;
-  --sage-light:  #B7E4C7;
-  --lavender:    #D4C5E2;
-  --ink:         #111111;
-  --ink-light:   #444444;
-  --ink-faint:   #888888;
-  --stamp-red:   #E63946;
-  --envelope:    #F0F0F0;
+  --cream:       #FFF8F2;
+  --blush:       #FF6B6B;
+  --blush-dark:  #EE5A5A;
+  --sage:        #51CF66;
+  --sage-light:  #D8F5DC;
+  --lavender:    #CC5DE8;
+  --ink:         #2B2340;
+  --ink-light:   #5C5470;
+  --ink-faint:   #9E95B0;
+  --stamp-red:   #FF6B6B;
+  --envelope:    #FFE8D6;
   --card-bg:     #FFFFFF;
-  --border:      #D0D0D0;
-  --border-light: #E8E8E8;
-  --shadow:      rgba(0, 0, 0, 0.04);
-  --shadow-lg:   rgba(0, 0, 0, 0.08);
+  --border:      #F0E4D8;
+  --border-light: #F5EDE4;
+  --shadow:      rgba(43, 35, 64, 0.06);
+  --shadow-lg:   rgba(43, 35, 64, 0.12);
 
-  --cat-food:      #E07B39;
-  --cat-outdoors:  #2D6A4F;
-  --cat-cozy:      #9B5DE5;
-  --cat-adventure: #F15BB5;
-  --cat-culture:   #00BBF9;
+  --cat-food:      #FF922B;
+  --cat-outdoors:  #51CF66;
+  --cat-cozy:      #CC5DE8;
+  --cat-adventure: #FCC419;
+  --cat-culture:   #339AF0;
 
-  background-color: #FFFFFF;
-  color: #111111;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(160deg, #FFF0E6 0%, #FFF8F2 30%, #F3EEFF 70%, #E8F4FD 100%);
+  background-attachment: fixed;
+  color: #2B2340;
 }
 
-/* No paper texture — completely clean */
+/* Playful dotted texture */
 body.version-3::before {
-  display: none;
+  background-image:
+    radial-gradient(circle, rgba(204, 93, 232, 0.03) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 107, 107, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px, 48px 48px;
+  background-position: 0 0, 16px 16px;
+  opacity: 1;
 }
 
-/* Header — minimal, left-aligned feel but centered */
-body.version-3 #app-header {
-  padding: 24px 16px 12px;
-}
-
+/* Header — fun, centered, colorful */
 body.version-3 .postmark-decoration {
-  display: none;
+  opacity: 0.06;
+}
+
+body.version-3 .postmark-decoration circle,
+body.version-3 .postmark-decoration line {
+  stroke: #CC5DE8;
 }
 
 body.version-3 .app-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 1.6rem;
-  letter-spacing: -0.03em;
-  color: #111111;
+  font-size: 2.4rem;
+  color: #2B2340;
 }
 
 body.version-3 .app-title .icon-inline {
-  color: #E63946;
+  color: #FF6B6B;
 }
 
 body.version-3 .app-tagline {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
-  color: #888888;
+  color: #5C5470;
+  font-size: 14px;
 }
 
 body.version-3 .app-names {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #888888;
-  letter-spacing: 0.08em;
+  color: #9E95B0;
 }
 
 body.version-3 .header-divider {
-  display: none;
+  color: #CC5DE8;
+  opacity: 0.3;
 }
 
-/* Cards — sharp, geometric */
+/* ── STRUCTURAL: Large rounded cards with thick colored borders ── */
 body.version-3 .postcard {
   background: #FFFFFF;
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
-  box-shadow: none;
+  border: 2.5px solid #F0E4D8;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(43, 35, 64, 0.08);
   background-image: none;
 }
 
 body.version-3 .postcard:hover {
-  border-color: #D0D0D0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px rgba(43, 35, 64, 0.12);
+  transform: translateY(-3px) rotate(0deg) !important;
 }
 
-/* Category bands — thin, geometric accent line instead of gradient */
+/* STRUCTURAL: Cards get thick category-colored borders */
+body.version-3 .postcard[data-category="Food"]      { border-color: #FF922B; }
+body.version-3 .postcard[data-category="Outdoors"]   { border-color: #51CF66; }
+body.version-3 .postcard[data-category="Cozy"]       { border-color: #CC5DE8; }
+body.version-3 .postcard[data-category="Adventure"]  { border-color: #FCC419; }
+body.version-3 .postcard[data-category="Culture"]    { border-color: #339AF0; }
+
+/* ── STRUCTURAL: Category band — 48px with large centered icon ── */
 body.version-3 .card-category-band {
-  height: 4px;
-  padding: 0;
-  border-radius: 4px 4px 0 0;
-  gap: 0;
+  height: 48px;
+  border-radius: 21px 21px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 body.version-3 .card-category-band[data-category="Food"] {
-  background: #E07B39;
+  background: linear-gradient(135deg, rgba(255, 146, 43, 0.2) 0%, rgba(255, 146, 43, 0.05) 100%);
 }
 body.version-3 .card-category-band[data-category="Outdoors"] {
-  background: #2D6A4F;
+  background: linear-gradient(135deg, rgba(81, 207, 102, 0.2) 0%, rgba(81, 207, 102, 0.05) 100%);
 }
 body.version-3 .card-category-band[data-category="Cozy"] {
-  background: #9B5DE5;
+  background: linear-gradient(135deg, rgba(204, 93, 232, 0.2) 0%, rgba(204, 93, 232, 0.05) 100%);
 }
 body.version-3 .card-category-band[data-category="Adventure"] {
-  background: #F15BB5;
+  background: linear-gradient(135deg, rgba(252, 196, 25, 0.2) 0%, rgba(252, 196, 25, 0.05) 100%);
 }
 body.version-3 .card-category-band[data-category="Culture"] {
-  background: #00BBF9;
+  background: linear-gradient(135deg, rgba(51, 154, 240, 0.2) 0%, rgba(51, 154, 240, 0.05) 100%);
 }
 
 body.version-3 .category-band-icon {
-  display: none;
+  color: rgba(43, 35, 64, 0.5);
 }
 
-/* Card content — system fonts, compact */
+body.version-3 .category-band-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ── STRUCTURAL: Large padded card content ── */
 body.version-3 .card-body {
-  padding: 14px 16px;
+  padding: 18px 22px;
 }
 
 body.version-3 .card-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 1.3;
-  color: #111111;
+  font-size: 24px;
+  color: #2B2340;
+  font-weight: 700;
 }
 
 body.version-3 .card-description {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-size: 13px;
-  color: #444444;
-  line-height: 1.5;
+  font-size: 14px;
+  color: #5C5470;
+  margin-top: 8px;
 }
 
 body.version-3 .card-meta {
-  border-top: 1px solid #E8E8E8;
-  gap: 10px;
-  margin-top: 8px;
-  padding-top: 8px;
+  border-top-color: #F0E4D8;
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
 }
 
 body.version-3 .card-meta-item {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 11px;
-  color: #888888;
+  font-size: 12px;
+  color: #9E95B0;
+  background: rgba(204, 93, 232, 0.06);
+  padding: 3px 10px;
+  border-radius: 100px;
 }
 
 body.version-3 .card-signature {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-size: 12px;
-  color: #888888;
-  font-weight: 500;
+  color: #9E95B0;
+  font-size: 16px;
 }
 
-/* Card actions — minimal */
+/* Card actions — large, rounded */
 body.version-3 .card-action-btn {
-  color: #888888;
-  border-radius: 4px;
-  min-width: 32px;
-  min-height: 32px;
+  color: #9E95B0;
+  border-radius: 14px;
+  min-width: 40px;
+  min-height: 40px;
 }
 
 body.version-3 .card-action-btn:hover {
-  background: #F5F5F5;
-  color: #444444;
+  background: rgba(43, 35, 64, 0.05);
+  color: #5C5470;
 }
 
 body.version-3 .btn-heart {
-  color: #D0D0D0;
+  color: #FF6B6B;
 }
 
 body.version-3 .btn-heart[data-hearted="true"] {
-  color: #E63946;
+  color: #FF6B6B;
+  filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.3));
 }
 
 body.version-3 .btn-heart:hover {
-  background: rgba(230, 57, 70, 0.06);
-  color: #E63946;
+  background: rgba(255, 107, 107, 0.1);
+  color: #EE5A5A;
 }
 
-/* Tab bar — clean, structured */
+/* ── STRUCTURAL: Oversized 20px card gaps ── */
+body.version-3 .card-list {
+  gap: 20px;
+}
+
+/* Fun alternating rotation */
+body.version-3 #the-box-list .postcard:nth-child(odd)  { transform: rotate(-0.8deg); }
+body.version-3 #the-box-list .postcard:nth-child(even) { transform: rotate(0.6deg); }
+body.version-3 #the-box-list .postcard:nth-child(3n)   { transform: rotate(-0.3deg); }
+
+/* ── STRUCTURAL: Colorful filled tab bar ── */
 body.version-3 .tab-bar {
   background: #FFFFFF;
-  border-top: 1.5px solid #E8E8E8;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  border-top: 2px solid #F0E4D8;
+  box-shadow: 0 -4px 20px rgba(43, 35, 64, 0.06);
+  padding: 8px 12px;
+  gap: 8px;
+  border-radius: 0;
+}
+
+body.version-3 .tab-bar-btn {
+  border-radius: 16px;
+  padding: 8px 20px;
+  transition: all 0.25s var(--spring);
+}
+
+/* STRUCTURAL: Active tab gets a filled colored background */
+body.version-3 .tab-bar-btn.active {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(204, 93, 232, 0.12));
 }
 
 body.version-3 .tab-bar-icon {
-  color: #888888;
+  color: #9E95B0;
 }
 
 body.version-3 .tab-bar-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #888888;
-  font-size: 11px;
+  color: #9E95B0;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 body.version-3 .tab-bar-btn.active .tab-bar-icon {
-  color: #111111;
+  color: #FF6B6B;
+  transform: translateY(-1px) scale(1.1);
 }
 
 body.version-3 .tab-bar-btn.active .tab-bar-label {
-  color: #111111;
+  color: #2B2340;
   font-weight: 600;
 }
 
 body.version-3 .tab-bar-btn.active::after {
-  background: #E63946;
-  height: 2px;
-  border-radius: 0;
-  width: 24px;
+  display: none;
 }
 
-/* Submission card — flat, clean */
+/* Section headers — playful */
+body.version-3 .section-header {
+  font-size: 22px;
+  color: #2B2340;
+}
+
+body.version-3 .section-header .icon-inline {
+  color: #FF6B6B;
+}
+
+body.version-3 .section-label {
+  font-size: 20px;
+  color: #5C5470;
+}
+
+body.version-3 .section-label .icon-inline {
+  color: #CC5DE8;
+}
+
+body.version-3 .empty-state {
+  color: #9E95B0;
+  font-size: 15px;
+}
+
+/* Filter pills — rounded, colorful hover */
+body.version-3 .filter-pills-bar {
+  background: linear-gradient(to bottom, rgba(255, 248, 242, 0.95) 80%, transparent);
+  gap: 8px;
+  padding: 14px 0;
+}
+
+body.version-3 .filter-pill {
+  color: #5C5470;
+  background: #FFFFFF;
+  border: 1.5px solid #F0E4D8;
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+body.version-3 .filter-pill:hover {
+  border-color: #CC5DE8;
+  background: rgba(204, 93, 232, 0.05);
+}
+
+body.version-3 .filter-pill.active {
+  background: linear-gradient(135deg, #FF6B6B, #CC5DE8);
+  color: #FFFFFF;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+}
+
+/* Submission card — rounded, warm */
 body.version-3 .submission-card {
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
-  box-shadow: none;
+  border: 2.5px solid #F0E4D8;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(43, 35, 64, 0.06);
   background-image: none;
 }
 
 body.version-3 .submission-card .card-watermark {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 36px;
-  font-weight: 300;
-}
-
-body.version-3 .submission-card .stamp-decoration {
-  display: none;
+  color: #2B2340;
+  opacity: 0.025;
 }
 
 body.version-3 .field-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 24px;
+  color: #2B2340;
 }
 
-body.version-3 .field-title::placeholder {
-  font-style: normal;
-  font-weight: 400;
-  color: #BBBBBB;
+body.version-3 .field-title::placeholder { color: #C0B8CC; }
+body.version-3 .field-description::placeholder { color: #C0B8CC; }
+body.version-3 .field-location::placeholder { color: #C0B8CC; }
+body.version-3 .signature-input::placeholder { color: #C0B8CC; }
+
+body.version-3 .field-title:focus,
+body.version-3 .field-description:focus,
+body.version-3 .field-location:focus,
+body.version-3 .signature-input:focus {
+  border-bottom-color: #CC5DE8;
 }
 
-body.version-3 .field-title:focus {
-  border-bottom-color: #E63946;
-}
-
-body.version-3 .field-description {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-size: 14px;
-}
-
-body.version-3 .field-description::placeholder {
-  color: #BBBBBB;
-}
-
-body.version-3 .field-description:focus {
-  border-bottom-color: #E63946;
-}
-
-body.version-3 .field-location {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-body.version-3 .field-location::placeholder { color: #BBBBBB; }
-body.version-3 .field-location:focus { border-bottom-color: #E63946; }
-
-body.version-3 .signature-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-body.version-3 .signature-input {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-body.version-3 .signature-input::placeholder { color: #BBBBBB; }
-body.version-3 .signature-input:focus { border-bottom-color: #E63946; }
-
-/* Wizard — geometric, red accent */
-body.version-3 .wizard-progress {
-  margin-bottom: 12px;
-}
-
+/* Wizard — fun gradient progress */
 body.version-3 .wizard-track {
-  height: 2px;
-  background: #E8E8E8;
-  border-radius: 0;
+  height: 4px;
+  background: #F0E4D8;
+  border-radius: 4px;
 }
 
 body.version-3 .wizard-fill {
-  background: #E63946;
-  border-radius: 0;
+  background: linear-gradient(90deg, #FF6B6B, #CC5DE8, #339AF0);
+  border-radius: 4px;
 }
 
 body.version-3 .wizard-dot {
-  width: 6px;
-  height: 6px;
-  background: #D0D0D0;
-  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: #F0E4D8;
 }
 
 body.version-3 .wizard-dot.active {
-  background: #E63946;
-  transform: scale(1.2);
+  background: #CC5DE8;
+  box-shadow: 0 0 10px rgba(204, 93, 232, 0.3);
 }
 
 body.version-3 .wizard-step-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #888888;
+  color: #5C5470;
+  font-size: 18px;
 }
 
 body.version-3 .wizard-next,
 body.version-3 .wizard-send {
-  background: #111111;
+  background: linear-gradient(135deg, #FF6B6B, #CC5DE8);
   color: #FFFFFF;
-  border-radius: 4px;
-  padding: 10px 20px;
-  box-shadow: none;
-  font-weight: 500;
+  border-radius: 16px;
+  padding: 12px 28px;
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.25);
+  font-size: 15px;
 }
 
 body.version-3 .wizard-next:hover,
 body.version-3 .wizard-send:not(:disabled):hover {
-  background: #333333;
-  box-shadow: none;
+  background: linear-gradient(135deg, #EE5A5A, #B84DCC);
+  box-shadow: 0 6px 24px rgba(255, 107, 107, 0.35);
 }
 
 body.version-3 .wizard-prev {
-  color: #888888;
-  font-weight: 400;
+  color: #9E95B0;
 }
 
 body.version-3 .wizard-prev:hover {
-  color: #111111;
+  color: #5C5470;
 }
 
-/* Chips — minimal, bordered */
+/* Chips — rounded, playful */
 body.version-3 .chip {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12px;
-  color: #444444;
+  color: #5C5470;
   background: #FFFFFF;
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
-  padding: 6px 12px;
+  border: 1.5px solid #F0E4D8;
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 13px;
 }
 
 body.version-3 .chip:hover {
-  border-color: #111111;
-  background: #FFFFFF;
+  border-color: #CC5DE8;
+  background: rgba(204, 93, 232, 0.05);
 }
 
 body.version-3 .chip.selected {
-  background: #111111;
+  background: linear-gradient(135deg, #FF6B6B, #CC5DE8);
   color: #FFFFFF;
-  border-color: #111111;
-  box-shadow: none;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
 }
 
-/* Filter pills — minimal tabs */
-body.version-3 .filter-pills-bar {
-  background: linear-gradient(to bottom, #FFFFFF 80%, transparent);
-  gap: 4px;
-  padding: 12px 0;
-}
-
-body.version-3 .filter-pill {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  color: #888888;
-  background: transparent;
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
-  padding: 6px 14px;
-}
-
-body.version-3 .filter-pill:hover {
-  border-color: #111111;
-  background: transparent;
-  color: #111111;
-}
-
-body.version-3 .filter-pill.active {
-  background: #111111;
-  color: #FFFFFF;
-  border-color: #111111;
-  box-shadow: none;
-}
-
-/* Section headers — clean type hierarchy */
-body.version-3 .section-header {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #111111;
-  margin-bottom: 12px;
-}
-
-body.version-3 .section-header .icon-inline {
-  color: #E63946;
-}
-
-body.version-3 .section-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #444444;
-}
-
-body.version-3 .section-label .icon-inline {
-  color: #888888;
-}
-
-body.version-3 #archive-count {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 400;
-  color: #888888;
-}
-
-body.version-3 .empty-state {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-size: 13px;
-  color: #BBBBBB;
-}
-
-/* Card list — tighter gap */
-body.version-3 .card-list {
-  gap: 10px;
-}
-
-/* No rotation in minimal mode */
-body.version-3 #the-box-list .postcard:nth-child(odd),
-body.version-3 #the-box-list .postcard:nth-child(even) {
-  transform: none;
-}
-
-/* Archive — just dimmed */
-body.version-3 #archive-list .postcard {
-  opacity: 0.5;
-  filter: none;
-}
-
-/* Surprise FAB — minimal circle */
+/* Surprise FAB — big, colorful, bouncy */
 body.version-3 .surprise-fab {
-  background: #111111;
-  border: none;
+  background: linear-gradient(135deg, #FF6B6B, #CC5DE8);
+  border: 3px solid #FFFFFF;
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  width: 48px;
-  height: 48px;
-  animation: none;
+  box-shadow: 0 6px 24px rgba(255, 107, 107, 0.3);
+  width: 60px;
+  height: 60px;
 }
 
 body.version-3 .surprise-fab:hover {
-  background: #333333;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
+  transform: scale(1.15) !important;
 }
 
-/* Surprise modal — clean */
+/* Surprise modal — bubbly */
 body.version-3 .surprise-modal-overlay {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(43, 35, 64, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 body.version-3 .surprise-modal {
   background: #FFFFFF;
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  padding: 36px 28px;
+  border-radius: 32px;
+  border: 2px solid #F0E4D8;
+  box-shadow: 0 20px 60px rgba(43, 35, 64, 0.18);
 }
 
-body.version-3 .surprise-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: #111111;
-}
-
-body.version-3 .surprise-desc {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-style: normal;
-  font-size: 14px;
-  color: #444444;
-}
-
-body.version-3 .surprise-meta {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12px;
-  color: #888888;
-}
+body.version-3 .surprise-title { color: #2B2340; font-size: 30px; }
+body.version-3 .surprise-desc { color: #5C5470; }
+body.version-3 .surprise-meta { color: #9E95B0; }
+body.version-3 .surprise-emoji { color: #FF6B6B; }
 
 body.version-3 .surprise-cta {
-  background: #111111;
+  background: linear-gradient(135deg, #FF6B6B, #CC5DE8);
   color: #FFFFFF;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: none;
+  border-radius: 20px;
+  font-size: 16px;
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.25);
 }
 
 body.version-3 .surprise-cta:hover {
-  background: #333333;
+  background: linear-gradient(135deg, #EE5A5A, #B84DCC);
 }
 
-body.version-3 .surprise-close {
-  color: #888888;
-}
+body.version-3 .surprise-close { color: #9E95B0; }
+body.version-3 .surprise-close:hover { color: #2B2340; background: rgba(43, 35, 64, 0.05); border-radius: 12px; }
 
-body.version-3 .surprise-close:hover {
-  color: #111111;
-  background: #F5F5F5;
-}
-
-body.version-3 .surprise-emoji {
-  color: #E63946;
-}
-
-/* Skeleton — flat */
+/* Skeleton — rounded */
 body.version-3 .skeleton-card {
   background: #FFFFFF;
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
+  border: 2px solid #F0E4D8;
+  border-radius: 24px;
 }
 
 body.version-3 .skeleton-line,
 body.version-3 .skeleton-circle {
-  background: #F0F0F0;
+  background: #F0E4D8;
+  border-radius: 10px;
 }
 
-/* Stamp overlay — flat */
-body.version-3 .stamp-overlay {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+/* Overlays */
+body.version-3 .stamp-overlay { background: rgba(255, 248, 242, 0.8); }
+body.version-3 .anim-overlay { background: rgba(255, 248, 242, 0.95); }
+
+/* Archive */
+body.version-3 #archive-list .postcard {
+  opacity: 0.55;
+  filter: grayscale(20%);
 }
 
-/* Anim overlay */
-body.version-3 .anim-overlay {
-  background: rgba(255, 255, 255, 0.96);
-}
-
-/* Delete confirm — minimal */
-body.version-3 .delete-confirm {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 12px;
-}
-
+/* Delete confirm */
 body.version-3 .delete-confirm button {
-  border-radius: 4px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 500;
+  border-radius: 10px;
 }
 
-/* Transitions on body for smooth version switching */
-body.version-3 section {
-  margin-top: 18px;
-}
-
-/* Version switcher — minimal */
+/* Version switcher — bubbly */
 body.version-3 .version-toggle {
   background: #FFFFFF;
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
-  color: #888888;
+  border: 2px solid #F0E4D8;
+  border-radius: 14px;
+  color: #9E95B0;
 }
 
 body.version-3 .version-panel {
   background: #FFFFFF;
-  border: 1.5px solid #E8E8E8;
-  border-radius: 4px;
+  border: 2px solid #F0E4D8;
+  border-radius: 20px;
 }
 
-body.version-3 .version-panel-title {
-  color: #888888;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-body.version-3 .version-btn {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #444444;
-  border-radius: 4px;
-}
-
-body.version-3 .version-btn:hover {
-  background: #F5F5F5;
-}
-
+body.version-3 .version-panel-title { color: #9E95B0; }
+body.version-3 .version-btn { color: #5C5470; border-radius: 10px; }
+body.version-3 .version-btn:hover { background: rgba(204, 93, 232, 0.06); }
 body.version-3 .version-btn.active {
-  background: #111111;
+  background: linear-gradient(135deg, #FF6B6B, #CC5DE8);
   color: #FFFFFF;
-  border-color: #111111;
+  border-color: transparent;
 }
 
 
@@ -1700,7 +1641,7 @@ body.version-3 .version-btn.active {
    ═══════════════════════════════════════════════════════════════════ */
 
 body {
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color 0.4s ease, color 0.4s ease, padding 0.4s ease;
 }
 
 .postcard,
@@ -1713,7 +1654,8 @@ body {
 .version-toggle,
 .version-panel,
 .version-btn {
-  transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease,
+              box-shadow 0.35s ease, border-radius 0.35s ease;
 }
 
 .card-title,
