@@ -1,4 +1,5 @@
 import { toggleHeart, removeIdea } from '../actions/ideas.js';
+import { store } from '../state/store.js';
 
 const THRESHOLD = 80;
 const MAX_DRAG = 120;
@@ -67,7 +68,9 @@ function onTouchEnd() {
   if (!activeCard) return;
   const card = activeCard;
   const id = Number(card.dataset.id);
-  const hearted = card.querySelector('.btn-heart')?.dataset.hearted === 'true';
+  // Read current hearted state from store (not stale DOM attribute)
+  const idea = store.get().ideas.find(i => i.id === id);
+  const hearted = idea ? idea.hearted : false;
 
   card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease';
 
