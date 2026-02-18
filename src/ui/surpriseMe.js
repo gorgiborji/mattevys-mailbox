@@ -4,14 +4,7 @@ import { selectBox, selectTopPicks } from '../state/selectors.js';
 import { markDone } from '../actions/ideas.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
 import { playStampCelebration } from './confetti.js';
-
-const CATEGORY_EMOJIS = {
-  Food: '🍽️',
-  Outdoors: '🌿',
-  Cozy: '🕯️',
-  Adventure: '⚡',
-  Culture: '🎭',
-};
+import { categoryIcon, iconMail, iconMapPin, iconDollarSign, iconTag } from './icons.js';
 
 const CATEGORY_COLORS = {
   Food:      'var(--cat-food)',
@@ -48,18 +41,18 @@ function openSurprise() {
   currentIdeaId = idea.id;
 
   const cat = idea.category || '';
-  const emoji = CATEGORY_EMOJIS[cat] || '💌';
+  const icon = categoryIcon(cat, 52) || iconMail(52);
   const color = CATEGORY_COLORS[cat] || 'var(--blush)';
 
-  $.surpriseEmoji.textContent = emoji;
+  $.surpriseEmoji.innerHTML = icon;
   $.surpriseTitle.textContent = idea.title;
   $.surpriseDesc.textContent = idea.description || '';
   $.surpriseDesc.style.display = idea.description ? '' : 'none';
 
   let metaHtml = '';
-  if (idea.location) metaHtml += `<span>📍 ${escapeHtml(idea.location)}</span>`;
-  if (idea.cost) metaHtml += `<span>💰 ${escapeHtml(idea.cost)}</span>`;
-  if (idea.category) metaHtml += `<span>🏷️ ${escapeHtml(idea.category)}</span>`;
+  if (idea.location) metaHtml += `<span>${iconMapPin()} ${escapeHtml(idea.location)}</span>`;
+  if (idea.cost) metaHtml += `<span>${iconDollarSign()} ${escapeHtml(idea.cost)}</span>`;
+  if (idea.category) metaHtml += `<span>${iconTag()} ${escapeHtml(idea.category)}</span>`;
   $.surpriseMeta.innerHTML = metaHtml;
 
   // Color theme

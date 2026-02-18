@@ -4,6 +4,10 @@ import { fetchIdeas } from './actions/ideas.js';
 import { renderBoard, updateLoadingUI } from './ui/renderBoard.js';
 import { bindEvents } from './ui/bindEvents.js';
 import { $ } from './ui/dom.js';
+import { injectStaticIcons } from './ui/injectIcons.js';
+
+// Inject SVG icons into static HTML elements
+injectStaticIcons();
 
 // Pre-fill saved username
 const savedUsername = getUsername();

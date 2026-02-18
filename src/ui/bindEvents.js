@@ -19,6 +19,7 @@ import { setupSwipe } from './swipe.js';
 import { setupSurpriseMe } from './surpriseMe.js';
 import { playStampCelebration } from './confetti.js';
 import { renderBoard } from './renderBoard.js';
+import { iconHeart, iconHeartFilled } from './icons.js';
 
 /* ── Card action delegation ─────────────────────────────────── */
 function handleCardAction(e) {
@@ -155,7 +156,7 @@ export function bindEvents() {
         // Switch to The Box tab after submitting
         setTimeout(() => switchTab('box'), 300);
       } catch {
-        showError("Couldn't send \u2014 check your connection and try again \uD83D\uDC8C");
+        showError("Couldn't send \u2014 check your connection and try again.");
         setFormDisabled(false);
         setAnimating(false);
       }

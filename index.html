@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mattevy's Mailbox 💌</title>
+  <title>Mattevy's Mailbox</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="src/styles/base.css">
 </head>
@@ -22,7 +22,7 @@
       <line x1="16" y1="88" x2="144" y2="88" stroke="#E0C9A6" stroke-width="1.5"/>
     </svg>
     <div class="header-content">
-      <h1 class="app-title">💌 Mattevy's Mailbox</h1>
+      <h1 class="app-title"><span class="icon-inline" id="header-icon"></span> Mattevy's Mailbox</h1>
       <p class="app-tagline">"Drop your ideas. We'll make memories."</p>
       <p class="app-names">Matt &nbsp;·&nbsp; Evy</p>
     </div>
@@ -35,7 +35,7 @@
     <!-- ── TAB: WRITE ──────────────────────────────────────────── -->
     <div class="tab-pane active" id="tab-write" data-tab="write">
       <section id="submission-section">
-        <p class="section-label">✉️ New Idea</p>
+        <p class="section-label"><span class="icon-inline" id="section-write-icon"></span> New Idea</p>
 
         <!-- Wizard progress bar -->
         <div class="wizard-progress" id="wizard-progress">
@@ -51,7 +51,7 @@
 
         <div id="submission-card" class="postcard submission-card" style="transform-style: preserve-3d;">
           <span class="card-watermark" id="form-watermark" aria-hidden="true">write your idea…</span>
-          <span class="stamp-decoration" aria-hidden="true">📮</span>
+          <span class="stamp-decoration" id="stamp-icon" aria-hidden="true"></span>
 
           <!-- Wizard container -->
           <div class="wizard-viewport" id="wizard-viewport">
@@ -95,7 +95,7 @@
               <div class="wizard-step" data-step="2">
                 <p class="wizard-step-label">Almost done!</p>
                 <div class="field-row">
-                  <span class="field-icon" aria-hidden="true">📍</span>
+                  <span class="field-icon" id="location-icon" aria-hidden="true"></span>
                   <label class="sr-only" for="field-location">Location</label>
                   <input id="field-location" class="field-location" type="text"
                          placeholder="Where? (optional)" autocomplete="off"
@@ -107,7 +107,7 @@
                   <input id="field-added-by" class="signature-input" type="text"
                          placeholder="Your name" autocomplete="off"
                          aria-label="Your name" maxlength="40"/>
-                  <span class="signature-icon" aria-hidden="true">✍️</span>
+                  <span class="signature-icon" id="signature-icon" aria-hidden="true"></span>
                 </div>
               </div>
 
@@ -118,7 +118,7 @@
           <div class="wizard-nav" id="wizard-nav">
             <button class="wizard-btn wizard-prev" id="wizard-prev" style="visibility:hidden">← Back</button>
             <button class="wizard-btn wizard-next" id="wizard-next">Next →</button>
-            <button class="wizard-btn wizard-send" id="submit-btn" style="display:none" disabled aria-label="Send idea">Send it ✉️</button>
+            <button class="wizard-btn wizard-send" id="submit-btn" style="display:none" disabled aria-label="Send idea">Send it</button>
           </div>
           <p id="submit-error" class="submit-error" style="display:none" role="alert"></p>
         </div>
@@ -131,14 +131,14 @@
       <!-- Filter pills -->
       <div class="filter-pills-bar" id="filter-pills-bar">
         <button class="filter-pill active" data-filter="all">All</button>
-        <button class="filter-pill" data-filter="Food">🍽️ Food</button>
-        <button class="filter-pill" data-filter="Outdoors">🌿 Outdoors</button>
-        <button class="filter-pill" data-filter="Cozy">🕯️ Cozy</button>
-        <button class="filter-pill" data-filter="Adventure">⚡ Adventure</button>
-        <button class="filter-pill" data-filter="Culture">🎭 Culture</button>
-        <button class="filter-pill" data-filter="$">💵</button>
-        <button class="filter-pill" data-filter="$$">💰</button>
-        <button class="filter-pill" data-filter="$$$">💎</button>
+        <button class="filter-pill" data-filter="Food"><span class="icon-inline" id="filter-food-icon"></span> Food</button>
+        <button class="filter-pill" data-filter="Outdoors"><span class="icon-inline" id="filter-outdoors-icon"></span> Outdoors</button>
+        <button class="filter-pill" data-filter="Cozy"><span class="icon-inline" id="filter-cozy-icon"></span> Cozy</button>
+        <button class="filter-pill" data-filter="Adventure"><span class="icon-inline" id="filter-adventure-icon"></span> Adventure</button>
+        <button class="filter-pill" data-filter="Culture"><span class="icon-inline" id="filter-culture-icon"></span> Culture</button>
+        <button class="filter-pill" data-filter="$">$</button>
+        <button class="filter-pill" data-filter="$$">$$</button>
+        <button class="filter-pill" data-filter="$$$">$$$</button>
       </div>
 
       <!-- Skeleton loading cards -->
@@ -150,7 +150,7 @@
 
       <!-- Top Picks -->
       <section id="top-picks-section">
-        <h2 class="section-header">❤️ Top Picks</h2>
+        <h2 class="section-header"><span class="icon-inline" id="section-heart-icon"></span> Top Picks</h2>
         <div id="top-picks-list" class="card-list"></div>
         <p id="top-picks-empty" class="empty-state" style="display:none">
           Heart an idea to pin it here
@@ -159,7 +159,7 @@
 
       <!-- The Box -->
       <section id="the-box-section">
-        <h2 class="section-header">📮 The Box</h2>
+        <h2 class="section-header"><span class="icon-inline" id="section-box-icon"></span> The Box</h2>
         <div id="the-box-list" class="card-list"></div>
         <p id="the-box-empty" class="empty-state" style="display:none">
           The box is empty — drop an idea above!
@@ -168,7 +168,7 @@
 
       <!-- Surprise Me FAB -->
       <button class="surprise-fab" id="surprise-fab" aria-label="Surprise me — pick a random idea">
-        🎲
+        <span id="surprise-fab-icon"></span>
       </button>
     </div>
 
@@ -176,7 +176,7 @@
     <div class="tab-pane" id="tab-archive" data-tab="archive">
       <section id="archive-section">
         <h2 class="section-header">
-          ✅ Archive <span id="archive-count"></span>
+          <span class="icon-inline" id="section-archive-icon"></span> Archive <span id="archive-count"></span>
         </h2>
         <div id="archive-list" class="card-list"></div>
         <p id="archive-empty" class="empty-state" style="display:none">
@@ -195,7 +195,7 @@
           <line x1="79" y1="1" x2="40" y2="30" stroke="#3D2B1F" stroke-width="1.5"/>
           <line x1="1"  y1="55" x2="36" y2="33" stroke="#3D2B1F" stroke-width="1.5"/>
           <line x1="79" y1="55" x2="44" y2="33" stroke="#3D2B1F" stroke-width="1.5"/>
-          <text x="40" y="22" font-size="14" text-anchor="middle" dominant-baseline="middle">❤️</text>
+          <path d="M35 18 38 22 46 14" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <div id="anim-box" class="anim-ballot-box" aria-hidden="true">
@@ -205,9 +205,10 @@
           <rect x="32" y="22" width="36" height="4" rx="1" fill="#5a3e30" opacity="0.5"/>
           <rect x="5" y="20" width="90" height="22" rx="6" fill="#E8D5B7" stroke="#3D2B1F" stroke-width="2"/>
           <rect x="30" y="24" width="40" height="8" rx="2" fill="#3D2B1F"/>
-          <text x="22" y="82" font-size="14" text-anchor="middle" dominant-baseline="middle" fill="#F2C4CE">♥</text>
-          <text x="78" y="82" font-size="14" text-anchor="middle" dominant-baseline="middle" fill="#F2C4CE">♥</text>
-          <text x="50" y="85" font-size="18" text-anchor="middle" dominant-baseline="middle">💌</text>
+          <path d="M22 82 c0-4 4-7 8-7s8 3 8 7-4 7-8 7-8-3-8-7z" fill="none" stroke="#F2C4CE" stroke-width="1.5"/>
+          <path d="M62 82 c0-4 4-7 8-7s8 3 8 7-4 7-8 7-8-3-8-7z" fill="none" stroke="#F2C4CE" stroke-width="1.5"/>
+          <rect x="42" y="78" width="16" height="12" rx="2" fill="none" stroke="#E8D5B7" stroke-width="1.5"/>
+          <path d="M42 78 50 84 58 78" stroke="#E8D5B7" stroke-width="1.5" fill="none"/>
         </svg>
       </div>
       <div id="anim-hearts" class="anim-hearts" aria-hidden="true"></div>
@@ -216,12 +217,12 @@
     <!-- ── SURPRISE ME MODAL ───────────────────────────────────── -->
     <div class="surprise-modal-overlay" id="surprise-modal" style="display:none">
       <div class="surprise-modal" id="surprise-modal-content">
-        <button class="surprise-close" id="surprise-close" aria-label="Close">✕</button>
+        <button class="surprise-close" id="surprise-close" aria-label="Close"><span id="surprise-close-icon"></span></button>
         <div class="surprise-emoji" id="surprise-emoji"></div>
         <h2 class="surprise-title" id="surprise-title"></h2>
         <p class="surprise-desc" id="surprise-desc"></p>
         <div class="surprise-meta" id="surprise-meta"></div>
-        <button class="surprise-cta" id="surprise-cta">Let's do this tonight ✨</button>
+        <button class="surprise-cta" id="surprise-cta">Let's do this tonight <span id="surprise-cta-sparkle"></span></button>
       </div>
     </div>
 
@@ -232,7 +233,7 @@
           <circle cx="60" cy="60" r="55" fill="#C0392B" opacity="0.9"/>
           <circle cx="60" cy="60" r="48" fill="none" stroke="#FDF6EC" stroke-width="2" stroke-dasharray="4 3"/>
           <text x="60" y="52" text-anchor="middle" fill="#FDF6EC" font-family="Caveat, cursive" font-size="22" font-weight="700">DONE</text>
-          <text x="60" y="76" text-anchor="middle" fill="#FDF6EC" font-size="24">✓</text>
+          <path d="M50 68 56 74 70 60" stroke="#FDF6EC" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="confetti-container" id="confetti-container"></div>
@@ -243,15 +244,15 @@
   <!-- ── BOTTOM TAB BAR ────────────────────────────────────────── -->
   <nav class="tab-bar" id="tab-bar" aria-label="Main navigation">
     <button class="tab-bar-btn active" data-tab="write" aria-label="Write a new idea" aria-current="page">
-      <span class="tab-bar-icon">✉️</span>
+      <span class="tab-bar-icon" id="tab-icon-write"></span>
       <span class="tab-bar-label">Write</span>
     </button>
     <button class="tab-bar-btn" data-tab="box" aria-label="The Box — browse ideas">
-      <span class="tab-bar-icon">📮</span>
+      <span class="tab-bar-icon" id="tab-icon-box"></span>
       <span class="tab-bar-label">The Box</span>
     </button>
     <button class="tab-bar-btn" data-tab="archive" aria-label="Archive — completed dates">
-      <span class="tab-bar-icon">✅</span>
+      <span class="tab-bar-icon" id="tab-icon-archive"></span>
       <span class="tab-bar-label">Archive</span>
     </button>
   </nav>
