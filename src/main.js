@@ -5,9 +5,13 @@ import { renderBoard, updateLoadingUI } from './ui/renderBoard.js';
 import { bindEvents } from './ui/bindEvents.js';
 import { $ } from './ui/dom.js';
 import { injectStaticIcons } from './ui/injectIcons.js';
+import { setupVersionSwitcher } from './ui/versionSwitcher.js';
 
 // Inject SVG icons into static HTML elements
 injectStaticIcons();
+
+// Setup design version switcher
+setupVersionSwitcher();
 
 // Pre-fill saved username
 const savedUsername = getUsername();
