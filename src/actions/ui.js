@@ -70,3 +70,7 @@ export function resetForm() {
 export function setAnimating(value) {
   store.set({ ui: { animating: value } });
 }
+
+export function setActiveFilter(filter) {
+  store.set({ ui: { activeFilter: filter } });
+}
