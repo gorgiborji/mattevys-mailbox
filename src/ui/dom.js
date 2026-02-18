@@ -10,7 +10,6 @@ export const $ = {
   animEnvelope:   document.getElementById('anim-envelope'),
   animBox:        document.getElementById('anim-box'),
   animHearts:     document.getElementById('anim-hearts'),
-  archiveToggle:  document.getElementById('archive-toggle'),
   topPicksList:   document.getElementById('top-picks-list'),
   theBoxList:     document.getElementById('the-box-list'),
   archiveList:    document.getElementById('archive-list'),
@@ -20,4 +19,38 @@ export const $ = {
   archiveCount:   document.getElementById('archive-count'),
   submissionCard: document.getElementById('submission-card'),
   appMain:        document.getElementById('app-main'),
+
+  // Tab navigation
+  tabBar:         document.getElementById('tab-bar'),
+  tabWrite:       document.getElementById('tab-write'),
+  tabBox:         document.getElementById('tab-box'),
+  tabArchive:     document.getElementById('tab-archive'),
+
+  // Wizard
+  wizardSlider:   document.getElementById('wizard-slider'),
+  wizardFill:     document.getElementById('wizard-fill'),
+  wizardPrev:     document.getElementById('wizard-prev'),
+  wizardNext:     document.getElementById('wizard-next'),
+  wizardProgress: document.getElementById('wizard-progress'),
+
+  // Filter pills
+  filterBar:      document.getElementById('filter-pills-bar'),
+
+  // Skeleton
+  skeletonCards:  document.getElementById('skeleton-cards'),
+
+  // Surprise Me
+  surpriseFab:    document.getElementById('surprise-fab'),
+  surpriseModal:  document.getElementById('surprise-modal'),
+  surpriseClose:  document.getElementById('surprise-close'),
+  surpriseEmoji:  document.getElementById('surprise-emoji'),
+  surpriseTitle:  document.getElementById('surprise-title'),
+  surpriseDesc:   document.getElementById('surprise-desc'),
+  surpriseMeta:   document.getElementById('surprise-meta'),
+  surpriseCta:    document.getElementById('surprise-cta'),
+
+  // Stamp / Confetti
+  stampOverlay:   document.getElementById('stamp-overlay'),
+  stampSeal:      document.getElementById('stamp-seal'),
+  confettiContainer: document.getElementById('confetti-container'),
 };

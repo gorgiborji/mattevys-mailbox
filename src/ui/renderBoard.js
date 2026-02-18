@@ -6,51 +6,69 @@ import { renderCard } from './renderCard.js';
 export function renderBoard() {
   const state = store.get();
   const { ideas } = state;
-  const { archiveOpen } = state.ui;
+  const filter = state.ui.activeFilter || 'all';
 
   const topPicks = selectTopPicks(ideas);
   const theBox   = selectBox(ideas);
   const archived = selectArchive(ideas);
 
+  // Apply filter to box/top picks
+  const filteredTopPicks = applyFilter(topPicks, filter);
+  const filteredBox      = applyFilter(theBox, filter);
+
   // Top Picks
   $.topPicksList.innerHTML = '';
-  topPicks.forEach(idea => $.topPicksList.appendChild(renderCard(idea)));
-  $.topPicksEmpty.style.display = topPicks.length === 0 ? '' : 'none';
+  filteredTopPicks.forEach((idea, i) => {
+    const card = renderCard(idea);
+    card.style.animationDelay = `${i * 50}ms`;
+    card.classList.add('card-stagger');
+    $.topPicksList.appendChild(card);
+  });
+  $.topPicksEmpty.style.display = filteredTopPicks.length === 0 ? '' : 'none';
 
   // The Box
   $.theBoxList.innerHTML = '';
-  theBox.forEach(idea => $.theBoxList.appendChild(renderCard(idea)));
-  $.theBoxEmpty.style.display = theBox.length === 0 ? '' : 'none';
+  filteredBox.forEach((idea, i) => {
+    const card = renderCard(idea);
+    card.style.animationDelay = `${i * 50}ms`;
+    card.classList.add('card-stagger');
+    $.theBoxList.appendChild(card);
+  });
+  $.theBoxEmpty.style.display = filteredBox.length === 0 ? '' : 'none';
 
   // Archive
   $.archiveList.innerHTML = '';
   archived.forEach(idea => $.archiveList.appendChild(renderCard(idea)));
   $.archiveCount.textContent = archived.length > 0 ? `(${archived.length})` : '';
-  $.archiveEmpty.style.display = archived.length === 0 && archiveOpen ? '' : 'none';
+  $.archiveEmpty.style.display = archived.length === 0 ? '' : 'none';
+}
+
+function applyFilter(ideas, filter) {
+  if (filter === 'all') return ideas;
+  // Cost filters
+  if (filter === '$' || filter === '$$' || filter === '$$$') {
+    return ideas.filter(i => i.cost === filter);
+  }
+  // Category filters
+  return ideas.filter(i => i.category === filter);
 }
 
 export function updateArchiveUI() {
+  // Archive is now always visible on its tab — just update content
   const state = store.get();
-  const { archiveOpen } = state.ui;
   const archived = selectArchive(state.ideas);
-
-  $.archiveToggle.classList.toggle('expanded', archiveOpen);
-  $.archiveToggle.setAttribute('aria-expanded', archiveOpen ? 'true' : 'false');
-
-  if (archiveOpen) {
-    $.archiveList.style.display = '';
-    $.archiveEmpty.style.display = archived.length === 0 ? '' : 'none';
-  } else {
-    $.archiveList.style.display = 'none';
-    $.archiveEmpty.style.display = 'none';
-  }
+  $.archiveEmpty.style.display = archived.length === 0 ? '' : 'none';
 }
 
 export function updateLoadingUI() {
   const { loading } = store.get().ui;
   if (loading) {
-    $.appMain.classList.add('loading');
+    $.skeletonCards.style.display = '';
+    $.topPicksList.parentElement.style.display = 'none';
+    $.theBoxList.parentElement.style.display = 'none';
   } else {
-    $.appMain.classList.remove('loading');
+    $.skeletonCards.style.display = 'none';
+    $.topPicksList.parentElement.style.display = '';
+    $.theBoxList.parentElement.style.display = '';
   }
 }

@@ -1,7 +1,7 @@
 import { store } from './state/store.js';
 import { getUsername } from './utils/preferences.js';
 import { fetchIdeas } from './actions/ideas.js';
-import { renderBoard, updateArchiveUI, updateLoadingUI } from './ui/renderBoard.js';
+import { renderBoard, updateLoadingUI } from './ui/renderBoard.js';
 import { bindEvents } from './ui/bindEvents.js';
 import { $ } from './ui/dom.js';
 
@@ -16,10 +16,6 @@ if (savedUsername) {
 store.subscribe((newState, prevState) => {
   if (prevState.ideas !== newState.ideas) {
     renderBoard();
-  }
-
-  if (prevState.ui.archiveOpen !== newState.ui.archiveOpen) {
-    updateArchiveUI();
   }
 
   if (prevState.ui.loading !== newState.ui.loading) {

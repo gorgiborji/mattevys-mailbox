@@ -57,6 +57,7 @@ export const store = createStore({
     animating: false,
     loading: false,
     error: null,
+    activeFilter: 'all',
   },
   form: {
     title: '',

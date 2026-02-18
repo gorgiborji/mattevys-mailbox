@@ -2,17 +2,23 @@ import { store } from '../state/store.js';
 import { $ } from './dom.js';
 import { toggleHeart, markDone, removeIdea, createIdea } from '../actions/ideas.js';
 import {
-  toggleArchive,
   updateWatermark,
   showError,
   hideError,
   setFormDisabled,
   resetForm,
   setAnimating,
+  setActiveFilter,
 } from '../actions/ui.js';
 import { playSubmitAnimation } from './animation.js';
 import { setupChips } from './chips.js';
 import { saveUsername } from '../utils/preferences.js';
+import { setupTabs, switchTab } from './tabs.js';
+import { setupWizard, resetWizard } from './wizard.js';
+import { setupSwipe } from './swipe.js';
+import { setupSurpriseMe } from './surpriseMe.js';
+import { playStampCelebration } from './confetti.js';
+import { renderBoard } from './renderBoard.js';
 
 /* ── Card action delegation ─────────────────────────────────── */
 function handleCardAction(e) {
@@ -21,6 +27,11 @@ function handleCardAction(e) {
   if (heartBtn) {
     const id = Number(heartBtn.dataset.id);
     const hearted = heartBtn.dataset.hearted === 'true';
+    // Springy animation
+    heartBtn.classList.add('heart-spring');
+    heartBtn.addEventListener('animationend', () => {
+      heartBtn.classList.remove('heart-spring');
+    }, { once: true });
     toggleHeart(id, hearted);
     return;
   }
@@ -30,10 +41,21 @@ function handleCardAction(e) {
   if (doneBtn) {
     const card = doneBtn.closest('.postcard');
     const id = Number(doneBtn.dataset.id);
-    // Small pulse animation on the card
-    card.style.transition = 'transform 0.15s';
-    card.style.transform = 'scale(0.97)';
-    setTimeout(() => { card.style.transform = ''; markDone(id); }, 150);
+
+    // Animate SVG checkmark
+    const path = doneBtn.querySelector('.done-check-path');
+    if (path) {
+      path.classList.add('draw-check');
+    }
+
+    // Card slide-down + fade-out
+    setTimeout(() => {
+      card.classList.add('card-removing');
+      card.addEventListener('animationend', () => {
+        markDone(id);
+        playStampCelebration();
+      }, { once: true });
+    }, 400);
     return;
   }
 
@@ -59,7 +81,10 @@ function handleCardAction(e) {
   if (yesBtn) {
     const card = yesBtn.closest('.postcard');
     const id = Number(card.dataset.id);
-    removeIdea(id);
+    card.classList.add('card-removing');
+    card.addEventListener('animationend', () => {
+      removeIdea(id);
+    }, { once: true });
     return;
   }
 
@@ -71,6 +96,20 @@ function handleCardAction(e) {
     container.innerHTML = '';
     return;
   }
+}
+
+/* ── Filter pills ───────────────────────────────────────────── */
+function setupFilterPills() {
+  $.filterBar.addEventListener('click', (e) => {
+    const pill = e.target.closest('.filter-pill');
+    if (!pill) return;
+
+    $.filterBar.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+
+    setActiveFilter(pill.dataset.filter);
+    renderBoard();
+  });
 }
 
 /* ── Public setup ───────────────────────────────────────────── */
@@ -112,6 +151,9 @@ export function bindEvents() {
       try {
         await createIdea(ideaData);
         resetForm();
+        resetWizard();
+        // Switch to The Box tab after submitting
+        setTimeout(() => switchTab('box'), 300);
       } catch {
         showError("Couldn't send \u2014 check your connection and try again \uD83D\uDC8C");
         setFormDisabled(false);
@@ -120,16 +162,20 @@ export function bindEvents() {
     });
   });
 
-  // Archive toggle
-  function handleArchiveToggle() { toggleArchive(); }
+  // Tab navigation
+  setupTabs();
 
-  $.archiveToggle.addEventListener('click', handleArchiveToggle);
-  $.archiveToggle.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleArchiveToggle();
-    }
-  });
+  // Wizard
+  setupWizard();
+
+  // Swipe gestures
+  setupSwipe();
+
+  // Surprise Me
+  setupSurpriseMe();
+
+  // Filter pills
+  setupFilterPills();
 
   // Chip groups
   setupChips('cost-chips', 'cost');
