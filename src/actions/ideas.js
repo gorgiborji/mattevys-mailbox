@@ -36,19 +36,29 @@ export async function toggleHeart(id, currentState) {
 }
 
 export async function markDone(id) {
+  // Optimistic update — mark done in store immediately
+  const prevIdeas = store.get().ideas;
+  store.set({ ideas: prevIdeas.map(i => i.id === id ? { ...i, done: true } : i) });
+
   try {
     await repo.updateIdea(id, { done: true });
-    await fetchIdeas();
+    // Optimistic update was correct — no re-fetch needed
   } catch {
-    await fetchIdeas();
+    // Roll back
+    store.set({ ideas: prevIdeas });
   }
 }
 
 export async function removeIdea(id) {
+  // Optimistic update — remove from store immediately
+  const prevIdeas = store.get().ideas;
+  store.set({ ideas: prevIdeas.filter(i => i.id !== id) });
+
   try {
     await repo.deleteIdea(id);
-    await fetchIdeas();
+    // Optimistic update was correct — no re-fetch needed
   } catch {
-    await fetchIdeas();
+    // Roll back: restore the idea
+    store.set({ ideas: prevIdeas });
   }
 }

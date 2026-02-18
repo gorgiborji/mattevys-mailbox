@@ -61,6 +61,8 @@ function handleCardAction(e) {
         markDone(id);
         playStampCelebration();
       };
+      // Remove card-stagger so card-removing animation takes effect
+      card.classList.remove('card-stagger');
       card.classList.add('card-removing');
       card.addEventListener('animationend', doDone, { once: true });
       // Fallback: if animationend never fires, proceed after timeout
@@ -97,6 +99,9 @@ function handleCardAction(e) {
       removed = true;
       removeIdea(id);
     };
+    // Remove card-stagger so card-removing animation takes effect
+    // (card-stagger is later in CSS and overrides card-removing otherwise)
+    card.classList.remove('card-stagger');
     card.classList.add('card-removing');
     card.addEventListener('animationend', doRemove, { once: true });
     // Fallback: if animationend never fires, remove after timeout
