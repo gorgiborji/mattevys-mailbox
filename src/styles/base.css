@@ -1,0 +1,695 @@
+/* ── CSS CUSTOM PROPERTIES ───────────────────────────────────── */
+:root {
+  --cream:      #FDF6EC;
+  --blush:      #F2C4CE;
+  --sage:       #B7C9B0;
+  --lavender:   #D4C5E2;
+  --ink:        #3D2B1F;
+  --ink-light:  #7A5C4F;
+  --stamp-red:  #C0392B;
+  --envelope:   #E8D5B7;
+  --card-bg:    #FFFDF7;
+  --border:     #E0C9A6;
+  --shadow:     rgba(61, 43, 31, 0.08);
+
+  /* category stripe colours */
+  --cat-food:      #F4A261;
+  --cat-outdoors:  #81B29A;
+  --cat-cozy:      #E8C5E5;
+  --cat-adventure: #F4D35E;
+  --cat-culture:   #B5C7D3;
+}
+
+/* ── RESET & BASE ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Paper texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── LAYOUT ───────────────────────────────────────────────────── */
+#app-header, #app-main {
+  position: relative;
+  z-index: 1;
+}
+
+#app-header {
+  text-align: center;
+  padding: 32px 16px 20px;
+  position: relative;
+}
+
+.postmark-decoration {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.header-content { position: relative; z-index: 1; }
+
+.app-title {
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.app-tagline {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-top: 4px;
+}
+
+.app-names {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink-light);
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+}
+
+.header-divider {
+  margin: 16px auto 0;
+  color: var(--border);
+  font-size: 14px;
+  letter-spacing: 0.4em;
+}
+
+#app-main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+}
+
+/* ── SECTIONS ─────────────────────────────────────────────────── */
+section { margin-top: 32px; }
+
+.section-label {
+  font-family: 'Caveat', cursive;
+  font-size: 18px;
+  color: var(--ink-light);
+  margin-bottom: 8px;
+}
+
+.section-header {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.archive-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.archive-toggle .archive-chevron {
+  margin-left: auto;
+  font-size: 16px;
+  transition: transform 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.archive-toggle.expanded .archive-chevron {
+  transform: rotate(180deg);
+}
+
+#archive-count {
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  color: var(--ink-light);
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.empty-state {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-light);
+  opacity: 0.7;
+  text-align: center;
+  padding: 16px 0;
+}
+
+/* ── POSTCARD BASE ────────────────────────────────────────────── */
+.postcard {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow), 0 0 0 1px var(--border);
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+  background-image:
+    linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 60%),
+    repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      rgba(180, 150, 120, 0.15) 27px,
+      rgba(180, 150, 120, 0.15) 28px
+    );
+}
+
+/* Category stripe — set via inline style / data attr */
+.postcard::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+  background: var(--border);
+}
+
+.postcard[data-category="Food"]::before      { background: var(--cat-food); }
+.postcard[data-category="Outdoors"]::before  { background: var(--cat-outdoors); }
+.postcard[data-category="Cozy"]::before      { background: var(--cat-cozy); }
+.postcard[data-category="Adventure"]::before { background: var(--cat-adventure); }
+.postcard[data-category="Culture"]::before   { background: var(--cat-culture); }
+
+/* Alternating rotation on The Box cards */
+#the-box-list .postcard:nth-child(odd)  { transform: rotate(-0.5deg); --card-rotation: -0.5deg; }
+#the-box-list .postcard:nth-child(even) { transform: rotate(0.5deg);  --card-rotation:  0.5deg; }
+
+/* Archive desaturation */
+#archive-list .postcard {
+  opacity: 0.7;
+  filter: grayscale(20%);
+}
+
+/* ── SUBMISSION CARD ──────────────────────────────────────────── */
+#submission-section { margin-top: 20px; }
+
+.submission-card {
+  padding: 24px 28px 20px;
+}
+
+.submission-card .card-watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Caveat', cursive;
+  font-size: 48px;
+  color: var(--ink);
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.submission-card .stamp-decoration {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 22px;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.submission-card input,
+.submission-card textarea {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── FORM INPUTS ──────────────────────────────────────────────── */
+.field-title {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  color: var(--ink);
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 4px 0 6px;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.field-title::placeholder {
+  color: var(--ink-light);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.field-title:focus {
+  border-bottom-color: var(--blush);
+}
+
+.field-description {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink);
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 4px 0 6px;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.2s;
+  margin-top: 6px;
+}
+
+.field-description::placeholder {
+  color: var(--ink-light);
+  opacity: 0.6;
+}
+
+.field-description:focus {
+  border-bottom-color: var(--blush);
+}
+
+.field-divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 14px 0;
+  opacity: 0.7;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.field-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.field-location {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  padding: 4px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.2s;
+  min-width: 0;
+}
+
+.field-location::placeholder {
+  color: var(--ink-light);
+  opacity: 0.6;
+}
+
+.field-location:focus {
+  border-bottom-color: var(--blush);
+}
+
+/* ── CHIP GROUPS ──────────────────────────────────────────────── */
+.chip-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-light);
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+
+.chip:hover {
+  border-color: var(--blush);
+}
+
+.chip.selected {
+  background: var(--blush);
+  color: var(--ink);
+  border-color: var(--blush);
+  font-weight: 500;
+}
+
+/* ── SIGNATURE ────────────────────────────────────────────────── */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 14px;
+}
+
+.signature-label {
+  font-family: 'Caveat', cursive;
+  font-size: 14px;
+  color: var(--ink-light);
+}
+
+.signature-input {
+  font-family: 'Caveat', cursive;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  outline: none;
+  text-align: right;
+  width: 100px;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.signature-input::placeholder {
+  color: var(--ink-light);
+  opacity: 0.6;
+}
+
+.signature-input:focus {
+  border-bottom-color: var(--blush);
+}
+
+.signature-icon {
+  font-size: 14px;
+}
+
+/* ── SEND BUTTON ──────────────────────────────────────────────── */
+.send-btn {
+  width: 100%;
+  margin-top: 16px;
+  background: var(--blush);
+  color: var(--ink);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.send-btn:not(:disabled):hover {
+  background: #EDB0BC;
+}
+
+.send-btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.submit-error {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--stamp-red);
+  margin-top: 8px;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ── IDEA CARDS ───────────────────────────────────────────────── */
+.idea-card {
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.idea-card:hover {
+  box-shadow: 0 4px 16px var(--shadow), 0 0 0 1px var(--border);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding-left: 6px;
+}
+
+.card-title {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--ink);
+  line-height: 1.2;
+  flex: 1;
+}
+
+.card-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.card-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 5px;
+  border-radius: 6px;
+  transition: background 0.15s, transform 0.1s;
+  line-height: 1;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-action-btn:hover {
+  background: rgba(61, 43, 31, 0.06);
+}
+
+.card-action-btn:active {
+  transform: scale(0.9);
+}
+
+.card-description {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-top: 6px;
+  padding-left: 6px;
+  line-height: 1.5;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(180, 150, 120, 0.3);
+  padding-left: 6px;
+  flex-wrap: wrap;
+}
+
+.card-meta-item {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--ink-light);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.card-signature {
+  font-family: 'Caveat', cursive;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-light);
+  text-align: right;
+  margin-top: 10px;
+  padding-left: 6px;
+}
+
+.delete-confirm {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--stamp-red);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 6px;
+  animation: fadeIn 0.2s ease;
+}
+
+.delete-confirm button {
+  background: none;
+  border: 1px solid var(--stamp-red);
+  color: var(--stamp-red);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.delete-confirm .no-btn {
+  border-color: var(--border);
+  color: var(--ink-light);
+}
+
+/* ── CARD APPEAR ANIMATION ────────────────────────────────────── */
+@keyframes cardAppear {
+  from { opacity: 0; transform: translateY(12px) rotate(-1deg); }
+  to   { opacity: 1; transform: translateY(0) rotate(var(--card-rotation, 0deg)); }
+}
+
+.card-appearing {
+  animation: cardAppear 0.35s ease forwards;
+}
+
+/* ── LOADING STATE ────────────────────────────────────────────── */
+.loading .card-list {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── ANIMATION OVERLAY ────────────────────────────────────────── */
+.anim-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(253, 246, 236, 0.94);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.anim-overlay.visible {
+  opacity: 1;
+}
+
+.anim-envelope {
+  width: 80px;
+  height: 56px;
+  position: absolute;
+}
+
+.anim-ballot-box {
+  width: 100px;
+  height: 120px;
+}
+
+.anim-hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floating-heart {
+  position: absolute;
+  font-size: 18px;
+  animation: floatHeart linear forwards;
+  opacity: 0;
+}
+
+/* ── KEYFRAMES ────────────────────────────────────────────────── */
+@keyframes cardFold {
+  0%   { transform: perspective(800px) rotateX(0deg); opacity: 1; }
+  50%  { transform: perspective(800px) rotateX(-90deg) scaleX(0.95); }
+  100% { transform: perspective(800px) rotateX(-180deg) scaleX(0.9); opacity: 0.8; }
+}
+
+@keyframes envelopeDrop {
+  0%   { transform: translateY(-80px) rotate(-5deg); opacity: 1; }
+  70%  { transform: translateY(0px) rotate(2deg); }
+  85%  { transform: translateY(-8px) rotate(-1deg); }
+  100% { transform: translateY(8px) rotate(0deg); opacity: 0; }
+}
+
+@keyframes floatHeart {
+  0%   { transform: translateY(0) scale(0.8); opacity: 0.8; }
+  100% { transform: translateY(-90px) scale(1.3); opacity: 0; }
+}
+
+@keyframes boxPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@keyframes envelopePulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes overlayFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media (min-width: 640px) {
+  #app-main { padding: 0 24px 60px; }
+  .submission-card { padding: 28px 32px 24px; }
+}
+
+@media (min-width: 1024px) {
+  body { padding: 40px; }
+  #app-main { max-width: 520px; }
+}
+
+/* ── VISUALLY HIDDEN ──────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
