@@ -27,7 +27,10 @@ function handleCardAction(e) {
   const heartBtn = e.target.closest('.btn-heart');
   if (heartBtn) {
     const id = Number(heartBtn.dataset.id);
-    const hearted = heartBtn.dataset.hearted === 'true';
+    // Read current hearted state from store (not stale DOM attribute)
+    const idea = store.get().ideas.find(i => i.id === id);
+    if (!idea) return;
+    const hearted = idea.hearted;
     // Springy animation
     heartBtn.classList.add('heart-spring');
     heartBtn.addEventListener('animationend', () => {
@@ -51,11 +54,17 @@ function handleCardAction(e) {
 
     // Card slide-down + fade-out
     setTimeout(() => {
-      card.classList.add('card-removing');
-      card.addEventListener('animationend', () => {
+      let handled = false;
+      const doDone = () => {
+        if (handled) return;
+        handled = true;
         markDone(id);
         playStampCelebration();
-      }, { once: true });
+      };
+      card.classList.add('card-removing');
+      card.addEventListener('animationend', doDone, { once: true });
+      // Fallback: if animationend never fires, proceed after timeout
+      setTimeout(doDone, 500);
     }, 400);
     return;
   }
@@ -82,10 +91,16 @@ function handleCardAction(e) {
   if (yesBtn) {
     const card = yesBtn.closest('.postcard');
     const id = Number(card.dataset.id);
-    card.classList.add('card-removing');
-    card.addEventListener('animationend', () => {
+    let removed = false;
+    const doRemove = () => {
+      if (removed) return;
+      removed = true;
       removeIdea(id);
-    }, { once: true });
+    };
+    card.classList.add('card-removing');
+    card.addEventListener('animationend', doRemove, { once: true });
+    // Fallback: if animationend never fires, remove after timeout
+    setTimeout(doRemove, 500);
     return;
   }
 
