@@ -25,10 +25,13 @@ export async function toggleHeart(id, currentState) {
 
   try {
     await repo.updateIdea(id, { hearted: !currentState });
-    await fetchIdeas();
+    // Optimistic update is correct — no re-fetch needed
   } catch {
-    // Roll back optimistic update
-    await fetchIdeas();
+    // Roll back optimistic update directly, no loading flash
+    const rolledBack = store.get().ideas.map(i =>
+      i.id === id ? { ...i, hearted: currentState } : i
+    );
+    store.set({ ideas: rolledBack });
   }
 }
 
