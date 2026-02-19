@@ -1,19 +1,19 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 import {
   motion,
   AnimatePresence,
   useMotionValue,
   useTransform,
   animate,
-} from 'framer-motion';
-import { Heart, X, Check, MapPin, DollarSign, Tag } from 'lucide-react';
-import { useToggleHeart, useMarkDone, useDeleteIdea } from '../hooks/useIdeas';
-import { useStore } from '../store/useStore';
-import { CATEGORY_COLORS, CATEGORY_ICONS, EASE_OUT } from '../lib/constants';
-import styles from './IdeaCard.module.css';
+} from "framer-motion";
+import { Heart, X, Check, MapPin, DollarSign, Tag } from "lucide-react";
+import { useToggleHeart, useMarkDone, useDeleteIdea } from "../hooks/useIdeas";
+import { useStore } from "../store/useStore";
+import { CATEGORY_COLORS, CATEGORY_ICONS, EASE_OUT } from "../lib/constants";
+import styles from "./IdeaCard.module.css";
 
 const SWIPE_THRESHOLD = 80;
-const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
+const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
 
 export default function IdeaCard({ idea, index = 0, isArchived = false }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -26,13 +26,17 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
   const x = useMotionValue(0);
 
   // Swipe hint colours: red tint when dragging left, pink when dragging right
-  const swipeBg = useTransform(x, [-120, -30, 0, 30, 120], [
-    'rgba(192, 57, 43, 0.12)',
-    'rgba(192, 57, 43, 0)',
-    'rgba(0,0,0,0)',
-    'rgba(242, 196, 206, 0)',
-    'rgba(242, 196, 206, 0.18)',
-  ]);
+  const swipeBg = useTransform(
+    x,
+    [-120, -30, 0, 30, 120],
+    [
+      "rgba(192, 57, 43, 0.12)",
+      "rgba(192, 57, 43, 0)",
+      "rgba(0,0,0,0)",
+      "rgba(242, 196, 206, 0)",
+      "rgba(242, 196, 206, 0.18)",
+    ],
+  );
 
   const handleHeart = useCallback(() => {
     toggleHeart.mutate({ id: idea.id, hearted: !idea.hearted });
@@ -63,19 +67,19 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
         // Swipe right → toggle heart
         handleHeart();
       }
-      animate(x, 0, { type: 'spring', stiffness: 400, damping: 30 });
+      animate(x, 0, { type: "spring", stiffness: 400, damping: 30 });
     },
     [handleHeart, x],
   );
 
-  const cat = idea.category || '';
+  const cat = idea.category || "";
   const CategoryIcon = CATEGORY_ICONS[cat];
   const catColor = CATEGORY_COLORS[cat];
 
   if (isRemoving) {
     return (
       <motion.div
-        initial={{ opacity: 1, height: 'auto', y: 0 }}
+        initial={{ opacity: 1, height: "auto", y: 0 }}
         animate={{ opacity: 0, height: 0, y: 20, marginBottom: 0 }}
         transition={{ duration: 0.35, ease: EASE_OUT }}
       />
@@ -85,7 +89,7 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
   return (
     <motion.div
       layout
-      className={`${styles.card} ${isArchived ? styles.archived : ''}`}
+      className={`${styles.card} ${isArchived ? styles.archived : ""}`}
       style={{ backgroundColor: swipeBg }}
       initial={{ opacity: 0, y: 12 }}
       animate={{
@@ -97,13 +101,15 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
         delay: index * 0.04,
         duration: 0.35,
         ease: EASE_OUT,
-        layout: { type: 'spring', stiffness: 300, damping: 30 },
+        layout: { type: "spring", stiffness: 300, damping: 30 },
       }}
-      drag={isTouchDevice && !isArchived ? 'x' : false}
+      drag={isTouchDevice && !isArchived ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.15}
       onDragEnd={handleDragEnd}
-      whileHover={!isArchived ? { boxShadow: '0 4px 20px var(--shadow-lg)' } : undefined}
+      whileHover={
+        !isArchived ? { boxShadow: "0 4px 20px var(--shadow-lg)" } : undefined
+      }
     >
       {/* Category gradient band */}
       {cat && (
@@ -125,46 +131,48 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
         {/* Header row */}
         <div className={styles.header}>
           <h3 className={styles.title}>{idea.title}</h3>
-          <div className={styles.actions}>
-            {/* Heart */}
-            <motion.button
-              className={`${styles.actionBtn} ${styles.heartBtn}`}
-              onClick={handleHeart}
-              whileTap={{ scale: 1.4 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-              data-hearted={idea.hearted || undefined}
-              aria-label={
-                idea.hearted ? 'Remove from Top Picks' : 'Add to Top Picks'
-              }
-            >
-              <Heart
-                size={18}
-                fill={idea.hearted ? 'currentColor' : 'none'}
-              />
-            </motion.button>
+          {!isArchived && (
+            <div className={styles.actions}>
+              {/* Heart */}
+              <motion.button
+                className={`${styles.actionBtn} ${styles.heartBtn}`}
+                onClick={handleHeart}
+                whileTap={{ scale: 1.4 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                data-hearted={idea.hearted || undefined}
+                aria-label={
+                  idea.hearted ? "Remove from Top Picks" : "Add to Top Picks"
+                }
+              >
+                <Heart
+                  size={18}
+                  fill={idea.hearted ? "currentColor" : "none"}
+                />
+              </motion.button>
 
-            {/* Done */}
-            {!idea.done && (
+              {/* Done */}
+              {!idea.done && (
+                <motion.button
+                  className={styles.actionBtn}
+                  onClick={handleDone}
+                  whileTap={{ scale: 0.9 }}
+                  aria-label="Mark as done"
+                >
+                  <Check size={18} />
+                </motion.button>
+              )}
+
+              {/* Delete */}
               <motion.button
                 className={styles.actionBtn}
-                onClick={handleDone}
+                onClick={() => setShowConfirm(true)}
                 whileTap={{ scale: 0.9 }}
-                aria-label="Mark as done"
+                aria-label="Delete idea"
               >
-                <Check size={18} />
+                <X size={16} />
               </motion.button>
-            )}
-
-            {/* Delete */}
-            <motion.button
-              className={styles.actionBtn}
-              onClick={() => setShowConfirm(true)}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Delete idea"
-            >
-              <X size={16} />
-            </motion.button>
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Description */}
@@ -199,28 +207,30 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
         )}
 
         {/* Delete confirmation */}
-        <AnimatePresence>
-          {showConfirm && (
-            <motion.div
-              className={styles.deleteConfirm}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2, ease: EASE_OUT }}
-            >
-              <span>Remove this idea?</span>
-              <button className={styles.yesBtn} onClick={handleDelete}>
-                Yes
-              </button>
-              <button
-                className={styles.noBtn}
-                onClick={() => setShowConfirm(false)}
+        {!isArchived && (
+          <AnimatePresence>
+            {showConfirm && (
+              <motion.div
+                className={styles.deleteConfirm}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2, ease: EASE_OUT }}
               >
-                No
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <span>Remove this idea?</span>
+                <button className={styles.yesBtn} onClick={handleDelete}>
+                  Yes
+                </button>
+                <button
+                  className={styles.noBtn}
+                  onClick={() => setShowConfirm(false)}
+                >
+                  No
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
       </div>
     </motion.div>
   );

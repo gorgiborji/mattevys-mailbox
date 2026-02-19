@@ -1,35 +1,59 @@
-import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-// ── Fetch ──────────────────────────────────────────────────────
+const IDEAS_QUERY_KEY = ['ideas'];
+
+function normalizeIdea(row) {
+  return {
+    id: row.id,
+    title: row.title || 'Untitled date idea',
+    description: row.description ?? null,
+    location: row.location ?? null,
+    cost: row.cost ?? null,
+    category: row.category ?? null,
+    added_by: row.added_by ?? null,
+    hearted: Boolean(row.hearted),
+    done: Boolean(row.done),
+    created_at: row.created_at ?? null,
+  };
+}
 
 async function fetchIdeas() {
   const { data, error } = await supabase
     .from('ideas')
     .select('*')
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
+    .order('created_at', { ascending: false, nullsFirst: false });
+
+  if (error) {
+    throw new Error(error.message || 'Failed to fetch ideas');
+  }
+
+  if (!Array.isArray(data)) return [];
+  return data.map(normalizeIdea);
 }
 
 export function useIdeas() {
+  return useQuery({
+    queryKey: IDEAS_QUERY_KEY,
+    queryFn: fetchIdeas,
+    retry: 1,
+    staleTime: 15_000,
+    refetchOnWindowFocus: true,
+  });
+}
+
+// Single app-level realtime sync to avoid duplicate channels.
+export function useIdeasRealtimeSync() {
   const queryClient = useQueryClient();
 
-  const query = useQuery({
-    queryKey: ['ideas'],
-    queryFn: fetchIdeas,
-  });
-
-  // Real-time: any change to ideas table triggers a refetch.
-  // This means when Matt adds an idea, Evy sees it appear without refreshing.
   useEffect(() => {
     const channel = supabase
-      .channel('ideas-realtime')
+      .channel('ideas-realtime-sync')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'ideas' },
-        () => queryClient.invalidateQueries({ queryKey: ['ideas'] }),
+        () => queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY }),
       )
       .subscribe();
 
@@ -37,11 +61,7 @@ export function useIdeas() {
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
-
-  return query;
 }
-
-// ── Selectors ──────────────────────────────────────────────────
 
 export function selectTopPicks(ideas) {
   return ideas.filter((i) => i.hearted && !i.done);
@@ -63,8 +83,6 @@ export function applyFilter(ideas, filter) {
   return ideas.filter((i) => i.category === filter);
 }
 
-// ── Mutations ──────────────────────────────────────────────────
-
 export function useCreateIdea() {
   const queryClient = useQueryClient();
 
@@ -73,7 +91,7 @@ export function useCreateIdea() {
       const { error } = await supabase.from('ideas').insert([idea]);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['ideas'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY }),
   });
 }
 
@@ -82,25 +100,19 @@ export function useToggleHeart() {
 
   return useMutation({
     mutationFn: async ({ id, hearted }) => {
-      const { error } = await supabase
-        .from('ideas')
-        .update({ hearted })
-        .eq('id', id);
+      const { error } = await supabase.from('ideas').update({ hearted }).eq('id', id);
       if (error) throw error;
     },
-    // Optimistic: update the cache immediately so the heart feels instant
     onMutate: async ({ id, hearted }) => {
-      await queryClient.cancelQueries({ queryKey: ['ideas'] });
-      const previous = queryClient.getQueryData(['ideas']);
-      queryClient.setQueryData(['ideas'], (old) =>
-        old?.map((i) => (i.id === id ? { ...i, hearted } : i)),
-      );
+      await queryClient.cancelQueries({ queryKey: IDEAS_QUERY_KEY });
+      const previous = queryClient.getQueryData(IDEAS_QUERY_KEY);
+      queryClient.setQueryData(IDEAS_QUERY_KEY, (old) => old?.map((i) => (i.id === id ? { ...i, hearted } : i)));
       return { previous };
     },
     onError: (_err, _vars, context) => {
-      queryClient.setQueryData(['ideas'], context.previous);
+      queryClient.setQueryData(IDEAS_QUERY_KEY, context?.previous);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['ideas'] }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY }),
   });
 }
 
@@ -109,13 +121,10 @@ export function useMarkDone() {
 
   return useMutation({
     mutationFn: async (id) => {
-      const { error } = await supabase
-        .from('ideas')
-        .update({ done: true })
-        .eq('id', id);
+      const { error } = await supabase.from('ideas').update({ done: true }).eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['ideas'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY }),
   });
 }
 
@@ -127,18 +136,15 @@ export function useDeleteIdea() {
       const { error } = await supabase.from('ideas').delete().eq('id', id);
       if (error) throw error;
     },
-    // Optimistic: remove from list immediately so deletion feels instant
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ['ideas'] });
-      const previous = queryClient.getQueryData(['ideas']);
-      queryClient.setQueryData(['ideas'], (old) =>
-        old?.filter((i) => i.id !== id),
-      );
+      await queryClient.cancelQueries({ queryKey: IDEAS_QUERY_KEY });
+      const previous = queryClient.getQueryData(IDEAS_QUERY_KEY);
+      queryClient.setQueryData(IDEAS_QUERY_KEY, (old) => old?.filter((i) => i.id !== id));
       return { previous };
     },
     onError: (_err, _vars, context) => {
-      queryClient.setQueryData(['ideas'], context.previous);
+      queryClient.setQueryData(IDEAS_QUERY_KEY, context?.previous);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['ideas'] }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY }),
   });
 }
