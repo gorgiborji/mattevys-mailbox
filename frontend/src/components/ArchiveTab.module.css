@@ -1,0 +1,39 @@
+.section {
+  margin-top: 22px;
+}
+
+.header {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  color: var(--blush);
+}
+
+.count {
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faint);
+  text-align: center;
+  padding: 24px 0;
+}

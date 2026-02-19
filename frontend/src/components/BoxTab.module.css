@@ -1,0 +1,104 @@
+/* ── Sections ──────────────────────────────────────────────────── */
+.section {
+  margin-top: 22px;
+}
+
+.sectionHeader {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionIcon {
+  color: var(--blush);
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faint);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ── Skeleton loading ──────────────────────────────────────────── */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.skeletonCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeletonCard::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.8s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeletonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.skeletonLine {
+  border-radius: 6px;
+  background: var(--border-light);
+}
+
+.skeletonTitle {
+  width: 60%;
+  height: 18px;
+}
+
+.skeletonCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border-light);
+}
+
+.skeletonDesc {
+  width: 85%;
+  height: 12px;
+  margin-bottom: 8px;
+}
+
+.skeletonMeta {
+  width: 45%;
+  height: 12px;
+}
