@@ -1,56 +1,62 @@
-/* ── Sections ──────────────────────────────────────────────────── */
 .section {
-  margin-top: 22px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--border-main, var(--border-light));
+  border-radius: 18px;
+  background: linear-gradient(
+    155deg,
+    var(--surface-card, rgba(255, 255, 255, 0.86)) 0%,
+    var(--surface-card-alt, rgba(255, 249, 236, 0.8)) 100%
+  );
 }
 
 .sectionHeader {
-  font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-family: "Caveat", cursive;
+  font-size: 25px;
   color: var(--ink);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .sectionIcon {
-  color: var(--blush);
+  color: var(--accent-main, var(--blush-dark));
 }
 
 .cardList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .empty {
-  font-family: 'Lora', serif;
+  font-family: "Lora", serif;
   font-style: italic;
   font-size: 14px;
   color: var(--ink-faint);
   text-align: center;
-  padding: 24px 0;
+  padding: 20px 0 6px;
 }
 
-/* ── Skeleton loading ──────────────────────────────────────────── */
 .skeletonList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 22px;
+  gap: 14px;
+  margin-top: 16px;
 }
 
 .skeletonCard {
-  background: var(--card-bg);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 20px 24px;
+  background: var(--surface-card, var(--card-bg));
+  border: 1px solid var(--border-main, var(--border-light));
+  border-radius: 14px;
+  padding: 18px;
   overflow: hidden;
   position: relative;
 }
 
 .skeletonCard::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -64,41 +70,54 @@
 }
 
 @keyframes shimmer {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .skeletonHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .skeletonLine {
-  border-radius: 6px;
-  background: var(--border-light);
+  height: 10px;
+  border-radius: 100px;
+  background: #ede3d5;
 }
 
 .skeletonTitle {
-  width: 60%;
-  height: 18px;
+  width: 50%;
+}
+.skeletonDesc {
+  width: 80%;
+  margin-top: 10px;
+}
+.skeletonMeta {
+  width: 45%;
+  margin-top: 12px;
 }
 
 .skeletonCircle {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: var(--border-light);
+  background: #ede3d5;
 }
 
-.skeletonDesc {
-  width: 85%;
-  height: 12px;
-  margin-bottom: 8px;
-}
-
-.skeletonMeta {
-  width: 45%;
-  height: 12px;
+.error {
+  margin-top: 12px;
+  border: 1px dashed #d07c71;
+  background: #fff4f2;
+  color: #9d4337;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
 }

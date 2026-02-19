@@ -1,25 +1,19 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { useStore } from './store/useStore';
-import Header from './components/Header';
-import TabBar from './components/TabBar';
-import WriteTab from './components/WriteTab';
-import BoxTab from './components/BoxTab';
-import ArchiveTab from './components/ArchiveTab';
-import EnvelopeAnimation from './components/EnvelopeAnimation';
-import StampCelebration from './components/StampCelebration';
-import { EASE_OUT } from './lib/constants';
-import styles from './App.module.css';
+import { AnimatePresence, motion } from "framer-motion";
+import { useStore } from "./store/useStore";
+import { useIdeasRealtimeSync } from "./hooks/useIdeas";
+import Header from "./components/Header";
+import TabBar from "./components/TabBar";
+import WriteTab from "./components/WriteTab";
+import BoxTab from "./components/BoxTab";
+import ArchiveTab from "./components/ArchiveTab";
+import EnvelopeAnimation from "./components/EnvelopeAnimation";
+import StampCelebration from "./components/StampCelebration";
+import { EASE_OUT } from "./lib/constants";
+import styles from "./App.module.css";
 
 const tabVariants = {
-  enter: (direction) => ({
-    x: `${direction * 30}%`,
-    opacity: 0,
-  }),
-  active: {
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.35, ease: EASE_OUT },
-  },
+  enter: (direction) => ({ x: `${direction * 30}%`, opacity: 0 }),
+  active: { x: 0, opacity: 1, transition: { duration: 0.35, ease: EASE_OUT } },
   exit: (direction) => ({
     x: `${direction * -30}%`,
     opacity: 0,
@@ -29,16 +23,18 @@ const tabVariants = {
 
 function renderTab(tab) {
   switch (tab) {
-    case 'write':
+    case "write":
       return <WriteTab />;
-    case 'box':
+    case "box":
       return <BoxTab />;
-    case 'archive':
+    case "archive":
       return <ArchiveTab />;
   }
 }
 
 export default function App() {
+  useIdeasRealtimeSync();
+
   const activeTab = useStore((s) => s.activeTab);
   const tabDirection = useStore((s) => s.tabDirection);
   const showEnvelope = useStore((s) => s.showEnvelopeAnimation);
@@ -46,7 +42,10 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      <Header />
+      <aside className={styles.sidebar}>
+        <Header />
+        <TabBar />
+      </aside>
 
       <main className={styles.main}>
         <AnimatePresence mode="wait" custom={tabDirection} initial={false}>
@@ -62,8 +61,6 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       </main>
-
-      <TabBar />
 
       <AnimatePresence>
         {showEnvelope && <EnvelopeAnimation key="envelope" />}
