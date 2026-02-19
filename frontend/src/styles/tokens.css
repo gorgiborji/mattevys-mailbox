@@ -1,0 +1,37 @@
+:root {
+  /* ── Palette ─────────────────────────────────────────────────── */
+  --cream:        #FDF6EC;
+  --blush:        #F2C4CE;
+  --blush-dark:   #E8A8B8;
+  --sage:         #B7C9B0;
+  --sage-light:   #D4E4CE;
+  --lavender:     #D4C5E2;
+  --ink:          #3D2B1F;
+  --ink-light:    #7A5C4F;
+  --ink-faint:    #A48B7C;
+  --stamp-red:    #C0392B;
+  --envelope:     #E8D5B7;
+  --card-bg:      #FFFDF7;
+  --border:       #E0C9A6;
+  --border-light: #EDE0D0;
+  --shadow:       rgba(61, 43, 31, 0.08);
+  --shadow-lg:    rgba(61, 43, 31, 0.12);
+
+  /* ── Category colours ────────────────────────────────────────── */
+  --cat-food:      #F4A261;
+  --cat-outdoors:  #81B29A;
+  --cat-cozy:      #E8C5E5;
+  --cat-adventure: #F4D35E;
+  --cat-culture:   #B5C7D3;
+
+  /* ── Easing ──────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:  cubic-bezier(0.55, 0, 1, 0.45);
+  --spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Radii ───────────────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   20px;
+  --radius-pill: 100px;
+}

@@ -1,0 +1,63 @@
+.header {
+  text-align: center;
+  padding: 28px 16px 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.postmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 2.1rem;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.titleIcon {
+  color: var(--blush);
+  flex-shrink: 0;
+}
+
+.tagline {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-top: 6px;
+}
+
+.names {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.divider {
+  margin: 12px auto 0;
+  color: var(--border);
+  font-size: 14px;
+  letter-spacing: 0.4em;
+}
