@@ -4,6 +4,7 @@ export async function listIdeas() {
   const { data, error } = await sb
     .from('ideas')
     .select('*')
+    .or('deleted.is.null,deleted.eq.false')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data || [];
@@ -23,6 +24,9 @@ export async function updateIdea(id, patch) {
 }
 
 export async function deleteIdea(id) {
-  const { error } = await sb.from('ideas').delete().eq('id', id);
+  const { error } = await sb
+    .from('ideas')
+    .update({ deleted: true })
+    .eq('id', id);
   if (error) throw error;
 }

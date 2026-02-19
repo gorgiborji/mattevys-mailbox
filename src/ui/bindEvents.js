@@ -19,24 +19,16 @@ import { setupSwipe } from './swipe.js';
 import { setupSurpriseMe } from './surpriseMe.js';
 import { playStampCelebration } from './confetti.js';
 import { renderBoard } from './renderBoard.js';
-import { iconHeart, iconHeartFilled } from './icons.js';
 
 /* ── Card action delegation ─────────────────────────────────── */
 function handleCardAction(e) {
-  // Heart
+  // Heart — toggle fill (optimistic, no bounce)
   const heartBtn = e.target.closest('.btn-heart');
   if (heartBtn) {
     const id = Number(heartBtn.dataset.id);
-    // Read current hearted state from store (not stale DOM attribute)
     const idea = store.get().ideas.find(i => i.id === id);
     if (!idea) return;
-    const hearted = idea.hearted;
-    // Springy animation
-    heartBtn.classList.add('heart-spring');
-    heartBtn.addEventListener('animationend', () => {
-      heartBtn.classList.remove('heart-spring');
-    }, { once: true });
-    toggleHeart(id, hearted);
+    toggleHeart(id, idea.hearted);
     return;
   }
 
@@ -69,27 +61,10 @@ function handleCardAction(e) {
     return;
   }
 
-  // Delete — show inline confirm
+  // Delete — immediate soft delete with slide-out animation
   const deleteBtn = e.target.closest('.btn-delete');
   if (deleteBtn) {
     const card = deleteBtn.closest('.postcard');
-    const container = card.querySelector('.delete-confirm-container');
-    if (container.style.display !== 'none') return;
-    container.style.display = 'flex';
-    container.innerHTML = `
-      <div class="delete-confirm">
-        Remove this idea?
-        <button class="yes-btn" aria-label="Yes, delete">Yes</button>
-        <button class="no-btn" aria-label="No, keep it">No</button>
-      </div>
-    `;
-    return;
-  }
-
-  // Confirm delete
-  const yesBtn = e.target.closest('.yes-btn');
-  if (yesBtn) {
-    const card = yesBtn.closest('.postcard');
     const id = Number(card.dataset.id);
     let removed = false;
     const doRemove = () => {
@@ -99,17 +74,7 @@ function handleCardAction(e) {
     };
     card.classList.add('card-removing');
     card.addEventListener('animationend', doRemove, { once: true });
-    // Fallback: if animationend never fires, remove after timeout
     setTimeout(doRemove, 500);
-    return;
-  }
-
-  // Cancel delete
-  const noBtn = e.target.closest('.no-btn');
-  if (noBtn) {
-    const container = noBtn.closest('.delete-confirm-container');
-    container.style.display = 'none';
-    container.innerHTML = '';
     return;
   }
 }

@@ -23,7 +23,7 @@ function onTouchStart(e) {
   const card = e.target.closest('.idea-card');
   if (!card) return;
   // Don't interfere with buttons
-  if (e.target.closest('.card-action-btn, .delete-confirm, .yes-btn, .no-btn')) return;
+  if (e.target.closest('.card-action-btn')) return;
 
   activeCard = card;
   startX = e.touches[0].clientX;

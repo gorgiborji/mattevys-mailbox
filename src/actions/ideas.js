@@ -45,10 +45,19 @@ export async function markDone(id) {
 }
 
 export async function removeIdea(id) {
+  // Optimistic removal — hide from UI instantly
+  const ideas = store.get().ideas.map(i =>
+    i.id === id ? { ...i, deleted: true } : i
+  );
+  store.set({ ideas });
+
   try {
     await repo.deleteIdea(id);
-    await fetchIdeas();
   } catch {
-    await fetchIdeas();
+    // Roll back — un-flag so the card reappears
+    const rolledBack = store.get().ideas.map(i =>
+      i.id === id ? { ...i, deleted: false } : i
+    );
+    store.set({ ideas: rolledBack });
   }
 }

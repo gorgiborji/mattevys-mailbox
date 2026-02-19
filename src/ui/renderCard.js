@@ -59,7 +59,6 @@ export function renderCard(idea, isNew = false) {
       ${idea.description ? `<p class="card-description">${escapeHtml(idea.description)}</p>` : ''}
       ${metaHtml ? `<div class="card-meta">${metaHtml}</div>` : ''}
       ${idea.added_by ? `<p class="card-signature">\u2014 ${escapeHtml(idea.added_by)}</p>` : ''}
-      <div class="delete-confirm-container" style="display:none;"></div>
     </div>
   `;
 
