@@ -7,7 +7,7 @@ export const $ = {
   submitError:    document.getElementById('submit-error'),
   watermark:      document.getElementById('form-watermark'),
   overlay:        document.getElementById('animation-overlay'),
-  animEnvelope:   document.getElementById('anim-envelope'),
+  animBallot:     document.getElementById('anim-ballot'),
   animBox:        document.getElementById('anim-box'),
   animHearts:     document.getElementById('anim-hearts'),
   topPicksList:   document.getElementById('top-picks-list'),
