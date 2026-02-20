@@ -1,3 +1,8 @@
+/* ── Layout ─────────────────────────────────────────────────────── */
+.writeTab {
+  width: 100%;
+}
+
 /* ── Section label ──────────────────────────────────────────────── */
 .sectionLabel {
   font-family: 'Caveat', cursive;
@@ -94,13 +99,16 @@
 .viewport {
   overflow: hidden;
   position: relative;
-  min-height: 120px;
+  min-height: 190px;
 }
 
 .step {
   padding: 20px 24px 0;
   position: relative;
   z-index: 1;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
 }
 
 .stepLabel {
@@ -230,7 +238,8 @@
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
-  margin-top: 16px;
+  margin-top: auto;
+  padding-top: 16px;
 }
 
 .sigLabel {

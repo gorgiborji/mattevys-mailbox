@@ -98,21 +98,29 @@ export default function WriteTab() {
       done: false,
     };
 
+    const animationStart = Date.now();
+    const minAnimationMs = 1400;
     setShowEnvelope(true);
+
+    const waitForAnimation = async () => {
+      const elapsed = Date.now() - animationStart;
+      const remaining = Math.max(0, minAnimationMs - elapsed);
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+    };
 
     try {
       await createIdea.mutateAsync(ideaData);
-      // Reset form
+      await waitForAnimation();
       if (titleRef.current) titleRef.current.value = '';
       if (descRef.current) descRef.current.value = '';
       if (locationRef.current) locationRef.current.value = '';
       resetForm();
-      // Switch to The Box after animation completes
-      setTimeout(() => {
-        setShowEnvelope(false);
-        setActiveTab('box');
-      }, 2000);
+      setShowEnvelope(false);
+      setActiveTab('box');
     } catch {
+      await waitForAnimation();
       setShowEnvelope(false);
     }
   }, [
@@ -128,7 +136,7 @@ export default function WriteTab() {
   const canSubmit = step === TOTAL_STEPS - 1;
 
   return (
-    <div>
+    <div className={styles.writeTab}>
       <p className={styles.sectionLabel}>
         <PenLine size={16} className={styles.sectionIcon} /> New Idea
       </p>
@@ -219,6 +227,7 @@ export default function WriteTab() {
                   {COSTS.map((c) => (
                     <button
                       key={c}
+                      type="button"
                       className={`${styles.chip} ${selectedCost === c ? styles.chipSelected : ''}`}
                       onClick={() => setSelectedCost(c)}
                       role="radio"
@@ -237,6 +246,7 @@ export default function WriteTab() {
                   {CATEGORIES.map((c) => (
                     <button
                       key={c}
+                      type="button"
                       className={`${styles.chip} ${selectedCategory === c ? styles.chipSelected : ''}`}
                       onClick={() => setSelectedCategory(c)}
                       role="radio"
@@ -305,18 +315,19 @@ export default function WriteTab() {
         {/* Navigation */}
         <div className={styles.nav}>
           {step > 0 ? (
-            <button className={styles.prevBtn} onClick={goPrev}>
+            <button type="button" className={styles.prevBtn} onClick={goPrev}>
               &larr; Back
             </button>
           ) : (
             <span />
           )}
           {!canSubmit ? (
-            <button className={styles.nextBtn} onClick={goNext}>
+            <button type="button" className={styles.nextBtn} onClick={goNext}>
               Next &rarr;
             </button>
           ) : (
             <motion.button
+              type="button"
               className={styles.sendBtn}
               onClick={handleSubmit}
               disabled={createIdea.isPending}

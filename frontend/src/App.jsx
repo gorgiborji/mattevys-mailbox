@@ -50,6 +50,7 @@ export default function App() {
       <main className={styles.main}>
         <AnimatePresence mode="wait" custom={tabDirection} initial={false}>
           <motion.div
+            className={styles.tabPane}
             key={activeTab}
             custom={tabDirection}
             variants={tabVariants}
