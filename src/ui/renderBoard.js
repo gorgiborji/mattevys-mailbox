@@ -45,6 +45,10 @@ export function renderBoard() {
 
 function applyFilter(ideas, filter) {
   if (filter === 'all') return ideas;
+  // Priority filter
+  if (filter === 'urgent') {
+    return ideas.filter(i => i.priority === 'urgent');
+  }
   // Cost filters
   if (filter === '$' || filter === '$$' || filter === '$$$') {
     return ideas.filter(i => i.cost === filter);

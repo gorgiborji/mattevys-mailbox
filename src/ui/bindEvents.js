@@ -115,6 +115,7 @@ export function bindEvents() {
     saveUsername(name);
     store.set({ prefs: { username: name } });
 
+    const expiresVal = $.expiresInput ? $.expiresInput.value : '';
     const ideaData = {
       title,
       description: $.descInput.value.trim() || null,
@@ -124,6 +125,8 @@ export function bindEvents() {
       added_by: name || null,
       hearted: false,
       done: false,
+      priority: state.ui.selectedPriority || 'normal',
+      expires_at: expiresVal || null,
     };
 
     hideError();
@@ -161,4 +164,5 @@ export function bindEvents() {
   // Chip groups
   setupChips('cost-chips', 'cost');
   setupChips('category-chips', 'category');
+  setupChips('priority-chips', 'priority');
 }
