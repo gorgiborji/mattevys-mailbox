@@ -4,7 +4,7 @@ import { selectBox, selectTopPicks } from '../state/selectors.js';
 import { markDone } from '../actions/ideas.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
 import { playStampCelebration } from './confetti.js';
-import { categoryIcon, iconMail, iconMapPin, iconDollarSign, iconTag } from './icons.js';
+import { categoryIcon, iconMail, iconMapPin, iconDollarSign, iconTag, iconClock } from './icons.js';
 
 const CATEGORY_COLORS = {
   Food:      'var(--cat-food)',
@@ -53,6 +53,13 @@ function openSurprise() {
   if (idea.location) metaHtml += `<span>${iconMapPin()} ${escapeHtml(idea.location)}</span>`;
   if (idea.cost) metaHtml += `<span>${iconDollarSign()} ${escapeHtml(idea.cost)}</span>`;
   if (idea.category) metaHtml += `<span>${iconTag()} ${escapeHtml(idea.category)}</span>`;
+  if (idea.expires_at) {
+    const exp = new Date(idea.expires_at + 'T00:00:00');
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const days = Math.ceil((exp - now) / 86400000);
+    let label = days < 0 ? 'Expired' : days === 0 ? 'Expires today' : days === 1 ? 'Expires tomorrow' : `Expires in ${days} days`;
+    metaHtml += `<span>${iconClock()} ${escapeHtml(label)}</span>`;
+  }
   $.surpriseMeta.innerHTML = metaHtml;
 
   // Color theme

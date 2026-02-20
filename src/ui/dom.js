@@ -33,6 +33,10 @@ export const $ = {
   wizardNext:     document.getElementById('wizard-next'),
   wizardProgress: document.getElementById('wizard-progress'),
 
+  // Priority & expiry
+  expiresInput:   document.getElementById('field-expires'),
+  expiresRow:     document.getElementById('expires-row'),
+
   // Filter pills
   filterBar:      document.getElementById('filter-pills-bar'),
 

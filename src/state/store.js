@@ -53,6 +53,7 @@ export const store = createStore({
   ui: {
     selectedCost: null,
     selectedCategory: null,
+    selectedPriority: null,
     archiveOpen: false,
     animating: false,
     loading: false,

@@ -1416,6 +1416,133 @@ section { margin-top: 22px; }
   to   { opacity: 0; }
 }
 
+/* ── PRIORITY CHIPS ──────────────────────────────────────────── */
+.chip-priority {
+  gap: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.chip-priority .icon-inline {
+  display: inline-flex;
+  align-items: center;
+}
+
+.chip-priority .icon-inline svg {
+  width: 14px;
+  height: 14px;
+}
+
+.chip-urgent.selected {
+  background: #FDE8E8;
+  color: var(--stamp-red);
+  border-color: #F5B7B1;
+  box-shadow: 0 2px 6px rgba(192, 57, 43, 0.15);
+}
+
+/* ── EXPIRY DATE INPUT ──────────────────────────────────────── */
+.expires-row {
+  animation: fadeIn 0.25s var(--ease-out);
+}
+
+.field-expires {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.25s var(--ease-out);
+  min-width: 0;
+  /* iOS native date picker styling */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field-expires:focus {
+  border-bottom-color: var(--blush);
+}
+
+/* ── URGENT BADGE ON CARD BAND ──────────────────────────────── */
+.card-category-band.band-urgent {
+  background: linear-gradient(135deg, #FDE8E8 0%, rgba(192, 57, 43, 0.08) 100%);
+}
+
+/* When category + urgent, keep category color but shift it */
+.card-category-band.band-urgent[data-category="Food"] {
+  background: linear-gradient(135deg, var(--cat-food) 0%, #FDE8E8 100%);
+}
+.card-category-band.band-urgent[data-category="Outdoors"] {
+  background: linear-gradient(135deg, var(--cat-outdoors) 0%, #FDE8E8 100%);
+}
+.card-category-band.band-urgent[data-category="Cozy"] {
+  background: linear-gradient(135deg, var(--cat-cozy) 0%, #FDE8E8 100%);
+}
+.card-category-band.band-urgent[data-category="Adventure"] {
+  background: linear-gradient(135deg, var(--cat-adventure) 0%, #FDE8E8 100%);
+}
+.card-category-band.band-urgent[data-category="Culture"] {
+  background: linear-gradient(135deg, var(--cat-culture) 0%, #FDE8E8 100%);
+}
+
+.category-band-urgent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding-right: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--stamp-red);
+  letter-spacing: 0.02em;
+}
+
+.category-band-urgent svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── EXPIRY COUNTDOWN ON CARDS ──────────────────────────────── */
+.card-expiry {
+  color: var(--ink-faint);
+}
+
+.card-expiry-soon {
+  color: #E67E22;
+}
+
+.card-expiry-urgent {
+  color: var(--stamp-red);
+  font-weight: 500;
+}
+
+.card-expiry-expired {
+  color: var(--ink-faint);
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* ── EXPIRED CARD STATE ─────────────────────────────────────── */
+.card-expired {
+  opacity: 0.55;
+  filter: grayscale(20%);
+}
+
+.card-expired .card-category-band {
+  filter: grayscale(40%);
+}
+
+/* ── URGENT FILTER PILL ─────────────────────────────────────── */
+.filter-pill-urgent.active {
+  background: #FDE8E8;
+  color: var(--stamp-red);
+  border-color: #F5B7B1;
+}
+
 /* ── RESPONSIVE ───────────────────────────────────────────────── */
 @media (min-width: 640px) {
   #app-main { padding: 0 24px 24px; }

@@ -85,3 +85,10 @@ export const iconPenTool = (s = 14) => svg(s, s,
 
 export const iconStamp = (s = 22) => svg(s, s,
   `<path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z"/><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13"/>`);
+
+// ── Priority / expiry icons ─────────────────────────────────────
+export const iconClock = (s = 14) => svg(s, s,
+  `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`);
+
+export const iconAlertTriangle = (s = 14) => svg(s, s,
+  `<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>`);

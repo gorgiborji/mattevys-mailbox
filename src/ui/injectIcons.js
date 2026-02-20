@@ -3,6 +3,7 @@ import {
   iconHeart, iconHeartFilled, iconDice, iconX, iconSparkles,
   iconMapPin, iconStamp, iconPenTool, iconCheckCircle,
   iconUtensils, iconLeaf, iconFlame, iconZap, iconPalette,
+  iconClock, iconAlertTriangle,
 } from './icons.js';
 
 /**
@@ -40,6 +41,11 @@ export function injectStaticIcons() {
   set('filter-cozy-icon', iconFlame(14));
   set('filter-adventure-icon', iconZap(14));
   set('filter-culture-icon', iconPalette(14));
+
+  // Priority & expiry
+  set('priority-urgent-icon', iconAlertTriangle(14));
+  set('expires-icon', iconClock(14));
+  set('filter-urgent-icon', iconAlertTriangle(14));
 
   // Surprise FAB + modal
   set('surprise-fab-icon', iconDice(24));

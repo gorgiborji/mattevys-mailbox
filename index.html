@@ -71,7 +71,7 @@
                        aria-label="Description" maxlength="240"/>
               </div>
 
-              <!-- Step 2: Category + Cost -->
+              <!-- Step 2: Category + Cost + Priority + Expiry -->
               <div class="wizard-step" data-step="1">
                 <p class="wizard-step-label">Pick a vibe</p>
                 <div class="field-row" role="group" aria-label="Cost">
@@ -89,6 +89,20 @@
                     <button class="chip" data-value="Adventure" role="radio" aria-checked="false">Adventure</button>
                     <button class="chip" data-value="Culture"   role="radio" aria-checked="false">Culture</button>
                   </div>
+                </div>
+                <div class="field-row" role="group" aria-label="Priority">
+                  <div class="chip-group" id="priority-chips" role="radiogroup" aria-label="Priority level">
+                    <button class="chip chip-priority" data-value="normal"  role="radio" aria-checked="false">Normal</button>
+                    <button class="chip chip-priority chip-urgent" data-value="urgent" role="radio" aria-checked="false">
+                      <span class="icon-inline" id="priority-urgent-icon"></span> Time-sensitive
+                    </button>
+                  </div>
+                </div>
+                <div class="field-row expires-row" id="expires-row" style="display:none" role="group" aria-label="Expiration date">
+                  <span class="field-icon" id="expires-icon" aria-hidden="true"></span>
+                  <label class="sr-only" for="field-expires">Expires on</label>
+                  <input id="field-expires" class="field-expires" type="date"
+                         aria-label="Expiration date"/>
                 </div>
               </div>
 
@@ -137,6 +151,7 @@
         <button class="filter-pill" data-filter="Cozy"><span class="icon-inline" id="filter-cozy-icon"></span> Cozy</button>
         <button class="filter-pill" data-filter="Adventure"><span class="icon-inline" id="filter-adventure-icon"></span> Adventure</button>
         <button class="filter-pill" data-filter="Culture"><span class="icon-inline" id="filter-culture-icon"></span> Culture</button>
+        <button class="filter-pill filter-pill-urgent" data-filter="urgent"><span class="icon-inline" id="filter-urgent-icon"></span> Urgent</button>
         <button class="filter-pill" data-filter="$">$</button>
         <button class="filter-pill" data-filter="$$">$$</button>
         <button class="filter-pill" data-filter="$$$">$$$</button>

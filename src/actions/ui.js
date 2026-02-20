@@ -4,6 +4,16 @@ import { $ } from '../ui/dom.js';
 export function selectChip(type, value) {
   if (type === 'cost') {
     store.set({ ui: { selectedCost: value } });
+  } else if (type === 'priority') {
+    store.set({ ui: { selectedPriority: value } });
+    // Show/hide expiry date picker based on priority
+    if ($.expiresRow) {
+      $.expiresRow.style.display = value === 'urgent' ? '' : 'none';
+    }
+    // Clear expiry date when switching back to normal
+    if (value !== 'urgent' && $.expiresInput) {
+      $.expiresInput.value = '';
+    }
   } else {
     store.set({ ui: { selectedCategory: value } });
   }
@@ -15,10 +25,10 @@ export function toggleArchive() {
 }
 
 export function setFormDisabled(disabled) {
-  [$.titleInput, $.descInput, $.locationInput, $.addedByInput].forEach(el => {
-    el.disabled = disabled;
+  [$.titleInput, $.descInput, $.locationInput, $.addedByInput, $.expiresInput].forEach(el => {
+    if (el) el.disabled = disabled;
   });
-  document.querySelectorAll('#cost-chips .chip, #category-chips .chip').forEach(c => {
+  document.querySelectorAll('#cost-chips .chip, #category-chips .chip, #priority-chips .chip').forEach(c => {
     c.style.pointerEvents = disabled ? 'none' : '';
   });
   $.submitBtn.disabled = disabled;
@@ -50,12 +60,15 @@ export function resetForm() {
   $.locationInput.value = '';
   $.addedByInput.value  = username;
 
+  if ($.expiresInput) $.expiresInput.value = '';
+  if ($.expiresRow) $.expiresRow.style.display = 'none';
+
   store.set({
-    ui: { selectedCost: null, selectedCategory: null },
+    ui: { selectedCost: null, selectedCategory: null, selectedPriority: null },
     form: { title: '', description: '', location: '', addedBy: username },
   });
 
-  document.querySelectorAll('#cost-chips .chip, #category-chips .chip').forEach(c => {
+  document.querySelectorAll('#cost-chips .chip, #category-chips .chip, #priority-chips .chip').forEach(c => {
     c.classList.remove('selected');
     c.setAttribute('aria-checked', 'false');
   });
