@@ -22,18 +22,23 @@ export const useStore = create((set, get) => ({
 
   selectedCost: null,
   selectedCategory: null,
+  selectedPriority: null,
   setSelectedCost: (c) =>
     set((s) => ({ selectedCost: s.selectedCost === c ? null : c })),
   setSelectedCategory: (c) =>
     set((s) => ({ selectedCategory: s.selectedCategory === c ? null : c })),
+  setSelectedPriority: (p) =>
+    set((s) => ({ selectedPriority: s.selectedPriority === p ? null : p })),
 
   formTitle: '',
   formDescription: '',
+  formExpiresAt: '',
   setFormTitle: (v) => set({ formTitle: v }),
   setFormDescription: (v) => set({ formDescription: v }),
+  setFormExpiresAt: (v) => set({ formExpiresAt: v }),
 
   resetForm: () =>
-    set({ selectedCost: null, selectedCategory: null, wizardStep: 0, formTitle: '', formDescription: '' }),
+    set({ selectedCost: null, selectedCategory: null, selectedPriority: null, wizardStep: 0, formTitle: '', formDescription: '', formExpiresAt: '' }),
 
   showEnvelopeAnimation: false,
   showStampCelebration: false,

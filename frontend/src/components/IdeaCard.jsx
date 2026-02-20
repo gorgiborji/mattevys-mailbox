@@ -6,7 +6,7 @@ import {
   useTransform,
   animate,
 } from "framer-motion";
-import { Heart, X, Check, MapPin, DollarSign, Tag } from "lucide-react";
+import { Heart, X, Check, MapPin, DollarSign, Tag, AlertTriangle, Clock } from "lucide-react";
 import { useToggleHeart, useMarkDone, useDeleteIdea } from "../hooks/useIdeas";
 import { useStore } from "../store/useStore";
 import { CATEGORY_COLORS, CATEGORY_ICONS, EASE_OUT } from "../lib/constants";
@@ -14,6 +14,21 @@ import styles from "./IdeaCard.module.css";
 
 const SWIPE_THRESHOLD = 80;
 const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
+
+function getExpiryLabel(expiresAt) {
+  if (!expiresAt) return null;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const exp = new Date(expiresAt + 'T00:00:00');
+  const diffMs = exp - now;
+  const days = Math.ceil(diffMs / 86400000);
+
+  if (days < 0) return { text: 'Expired', cls: styles.expiryExpired };
+  if (days === 0) return { text: 'Expires today', cls: styles.expiryUrgent };
+  if (days === 1) return { text: 'Expires tomorrow', cls: styles.expiryUrgent };
+  if (days <= 3) return { text: `Expires in ${days} days`, cls: styles.expirySoon };
+  return { text: `Expires in ${days} days`, cls: '' };
+}
 
 export default function IdeaCard({ idea, index = 0, isArchived = false }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -75,6 +90,9 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
   const cat = idea.category || "";
   const CategoryIcon = CATEGORY_ICONS[cat];
   const catColor = CATEGORY_COLORS[cat];
+  const isUrgent = idea.priority === 'urgent';
+  const expiry = getExpiryLabel(idea.expires_at);
+  const isExpired = idea.expires_at && new Date(idea.expires_at + 'T00:00:00') < new Date(new Date().toDateString());
 
   if (isRemoving) {
     return (
@@ -89,7 +107,7 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
   return (
     <motion.div
       layout
-      className={`${styles.card} ${isArchived ? styles.archived : ""}`}
+      className={`${styles.card} ${isArchived ? styles.archived : ""} ${isExpired ? styles.expired : ""}`}
       style={{ backgroundColor: swipeBg }}
       initial={{ opacity: 0, y: 12 }}
       animate={{
@@ -112,9 +130,9 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
       }
     >
       {/* Category gradient band */}
-      {cat && (
+      {(cat || isUrgent) && (
         <div
-          className={styles.categoryBand}
+          className={`${styles.categoryBand} ${isUrgent ? styles.bandUrgent : ""}`}
           style={{
             background: catColor
               ? `linear-gradient(135deg, ${catColor} 0%, ${catColor}26 100%)`
@@ -123,6 +141,11 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
         >
           {CategoryIcon && (
             <CategoryIcon size={18} className={styles.categoryIcon} />
+          )}
+          {isUrgent && (
+            <span className={styles.urgentBadge}>
+              <AlertTriangle size={12} /> Time-sensitive
+            </span>
           )}
         </div>
       )}
@@ -181,7 +204,7 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
         )}
 
         {/* Meta info */}
-        {(idea.location || idea.cost || idea.category) && (
+        {(idea.location || idea.cost || idea.category || expiry) && (
           <div className={styles.meta}>
             {idea.location && (
               <span className={styles.metaItem}>
@@ -196,6 +219,11 @@ export default function IdeaCard({ idea, index = 0, isArchived = false }) {
             {idea.category && (
               <span className={styles.metaItem}>
                 <Tag size={14} /> {idea.category}
+              </span>
+            )}
+            {expiry && (
+              <span className={`${styles.metaItem} ${styles.expiryItem} ${expiry.cls}`}>
+                <Clock size={14} /> {expiry.text}
               </span>
             )}
           </div>

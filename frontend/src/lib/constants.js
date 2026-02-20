@@ -2,6 +2,7 @@ import { Utensils, Leaf, Flame, Zap, Palette } from 'lucide-react';
 
 export const CATEGORIES = ['Food', 'Outdoors', 'Cozy', 'Adventure', 'Culture'];
 export const COSTS = ['$', '$$', '$$$'];
+export const PRIORITIES = ['normal', 'urgent'];
 
 export const CATEGORY_COLORS = {
   Food: '#F4A261',
