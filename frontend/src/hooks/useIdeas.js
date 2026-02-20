@@ -23,6 +23,7 @@ async function fetchIdeas() {
   const { data, error } = await supabase
     .from('ideas')
     .select('*')
+    .or('deleted.is.null,deleted.eq.false')
     .order('created_at', { ascending: false, nullsFirst: false });
 
   if (error) {
@@ -88,10 +89,15 @@ export function useCreateIdea() {
 
   return useMutation({
     mutationFn: async (idea) => {
-      const { error } = await supabase.from('ideas').insert([idea]);
+      const payload = { ...idea, deleted: false };
+      const { data, error } = await supabase.from('ideas').insert([payload]).select().single();
       if (error) throw error;
+      return normalizeIdea(data);
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY }),
+    onSuccess: (createdIdea) => {
+      queryClient.setQueryData(IDEAS_QUERY_KEY, (old = []) => [createdIdea, ...old]);
+      queryClient.invalidateQueries({ queryKey: IDEAS_QUERY_KEY });
+    },
   });
 }
 
