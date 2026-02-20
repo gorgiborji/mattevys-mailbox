@@ -13,6 +13,8 @@ function normalizeIdea(row) {
     cost: row.cost ?? null,
     category: row.category ?? null,
     added_by: row.added_by ?? null,
+    priority: row.priority ?? 'normal',
+    expires_at: row.expires_at ?? null,
     hearted: Boolean(row.hearted),
     done: Boolean(row.done),
     created_at: row.created_at ?? null,
@@ -64,12 +66,20 @@ export function useIdeasRealtimeSync() {
   }, [queryClient]);
 }
 
+function sortUrgentFirst(ideas) {
+  return [...ideas].sort((a, b) => {
+    const aU = a.priority === 'urgent' ? 1 : 0;
+    const bU = b.priority === 'urgent' ? 1 : 0;
+    return bU - aU;
+  });
+}
+
 export function selectTopPicks(ideas) {
-  return ideas.filter((i) => i.hearted && !i.done);
+  return sortUrgentFirst(ideas.filter((i) => i.hearted && !i.done));
 }
 
 export function selectBox(ideas) {
-  return ideas.filter((i) => !i.hearted && !i.done);
+  return sortUrgentFirst(ideas.filter((i) => !i.hearted && !i.done));
 }
 
 export function selectArchive(ideas) {
@@ -78,6 +88,9 @@ export function selectArchive(ideas) {
 
 export function applyFilter(ideas, filter) {
   if (filter === 'all') return ideas;
+  if (filter === 'urgent') {
+    return ideas.filter((i) => i.priority === 'urgent');
+  }
   if (filter === '$' || filter === '$$' || filter === '$$$') {
     return ideas.filter((i) => i.cost === filter);
   }
@@ -91,7 +104,16 @@ export function useCreateIdea() {
     mutationFn: async (idea) => {
       const payload = { ...idea, deleted: false };
       const { data, error } = await supabase.from('ideas').insert([payload]).select().single();
-      if (error) throw error;
+      if (error) {
+        const msg = (error.message || '').toLowerCase();
+        if (msg.includes('priority') || msg.includes('expires_at') || msg.includes('column')) {
+          const { priority, expires_at, ...corePayload } = payload;
+          const { data: retryData, error: retryError } = await supabase.from('ideas').insert([corePayload]).select().single();
+          if (retryError) throw retryError;
+          return normalizeIdea(retryData);
+        }
+        throw error;
+      }
       return normalizeIdea(data);
     },
     onSuccess: (createdIdea) => {

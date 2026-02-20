@@ -232,6 +232,50 @@
   box-shadow: 0 2px 6px rgba(242, 196, 206, 0.3);
 }
 
+/* ── Priority chips ───────────────────────────────────────────── */
+.chipPriority {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chipUrgent {
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+}
+
+.chipUrgent:hover {
+  border-color: var(--stamp-red);
+  background: rgba(192, 57, 43, 0.08);
+}
+
+.chipUrgentSelected {
+  background: var(--stamp-red);
+  color: #fff;
+  border-color: var(--stamp-red);
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(192, 57, 43, 0.3);
+}
+
+/* ── Expiry date input ────────────────────────────────────────── */
+.fieldExpires {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.25s var(--ease-out);
+  min-width: 0;
+}
+
+.fieldExpires:focus {
+  border-bottom-color: var(--blush);
+}
+
 /* ── Signature footer ──────────────────────────────────────────── */
 .cardFooter {
   display: flex;

@@ -2,47 +2,71 @@
 
 A shared date-idea mailbox for Matt & Evy. Drop ideas, heart favorites, mark dates as done.
 
+## IMPORTANT: Active Codebase
+
+> **The React/Vite frontend (`frontend/`) is the active, deployed codebase.**
+> All new features, bug fixes, and improvements MUST go in `frontend/`.
+>
+> The vanilla JS version (`index.html` + `src/`) is **deprecated** and exists only for reference.
+> Do NOT add features to or modify the vanilla JS code. Do NOT change `vercel.json` to deploy it.
+
+## Deployment
+
+- **Platform**: Vercel
+- **Config**: `vercel.json` builds and deploys `frontend/dist` via Vite
+- **Do NOT** change `vercel.json` to point at the vanilla JS version
+
 ## Tech Stack
 
-- **Vanilla JS** (ES modules, no framework, no bundler)
-- **Supabase** backend (PostgreSQL via `@supabase/supabase-js` CDN)
-- **Single HTML entry** (`index.html`) with module scripts
-- No build step — files served directly
+- **React 18** + **Vite** (in `frontend/`)
+- **Zustand** for state management
+- **TanStack React Query** for data fetching + caching
+- **Framer Motion** for animations
+- **Lucide React** for icons
+- **Supabase** backend (PostgreSQL via `@supabase/supabase-js`)
+- **CSS Modules** for scoped styling
 
 ## Architecture
 
 ```
-index.html                    # Structure: header, 3 tab panes, overlays, bottom nav
-src/
-├── main.js                   # Entry: store subscriptions, bind events, inject icons, fetch data
-├── config.js                 # Supabase client (URL + anon key)
-├── actions/
-│   ├── ideas.js              # CRUD: fetchIdeas, createIdea, toggleHeart, markDone, removeIdea
-│   └── ui.js                 # UI state: chips, form reset, watermark, filter, animating
-├── data/
-│   └── ideasRepo.js          # Supabase queries (list, add, update, delete)
-├── state/
-│   ├── store.js              # Custom pub/sub store with one-level-deep merge
-│   └── selectors.js          # selectTopPicks, selectBox, selectArchive
-├── ui/
-│   ├── dom.js                # All getElementById refs as `$` object
-│   ├── icons.js              # Lucide-based SVG icon functions (all icons as inline SVG strings)
-│   ├── injectIcons.js        # Injects SVG icons into static HTML placeholder elements on load
-│   ├── renderBoard.js        # Renders all 3 card lists with filter + skeleton logic
-│   ├── renderCard.js         # Single card DOM builder (gradient band, SVG icons, checkmark)
-│   ├── bindEvents.js         # All event wiring (cards, submit, tabs, wizard, swipe, filters, surprise)
-│   ├── animation.js          # Submission envelope-drop animation
-│   ├── chips.js              # Chip toggle (cost/category radio buttons)
-│   ├── tabs.js               # Bottom tab navigation with slide transitions (400ms ease-out)
-│   ├── wizard.js             # 3-step form wizard (title → vibe → details)
-│   ├── swipe.js              # Touch swipe gestures (left=delete, right=heart)
-│   ├── surpriseMe.js         # Random idea FAB + full-screen modal
-│   └── confetti.js           # Stamp slam + confetti burst celebration
-├── utils/
-│   ├── escapeHtml.js         # XSS prevention
-│   └── preferences.js        # localStorage for saved username
-└── styles/
-    └── base.css              # All styling (single file, CSS custom properties)
+frontend/
+├── index.html
+├── vite.config.js
+├── package.json
+└── src/
+    ├── main.jsx                      # React entry point
+    ├── App.jsx                       # Root: tab routing, overlays, realtime sync
+    ├── App.module.css
+    ├── components/
+    │   ├── WriteTab.jsx              # 3-step wizard form (title → vibe+priority → location+signature)
+    │   ├── WriteTab.module.css
+    │   ├── BoxTab.jsx                # Top Picks + The Box with filter pills + skeleton loading
+    │   ├── BoxTab.module.css
+    │   ├── ArchiveTab.jsx            # Archive list with count
+    │   ├── ArchiveTab.module.css
+    │   ├── IdeaCard.jsx              # Card with band, actions, meta, expiry countdown, swipe
+    │   ├── IdeaCard.module.css
+    │   ├── FilterPills.jsx           # Category + cost + urgent filter bar
+    │   ├── FilterPills.module.css
+    │   ├── Header.jsx                # App header with postmark
+    │   ├── Header.module.css
+    │   ├── TabBar.jsx                # Bottom navigation
+    │   ├── TabBar.module.css
+    │   ├── EnvelopeAnimation.jsx     # Submission animation overlay
+    │   ├── StampCelebration.jsx      # Done stamp + confetti overlay
+    │   ├── SurpriseFab.jsx           # Random idea FAB + modal
+    │   ├── SurpriseMe.module.css
+    │   └── Overlays.module.css
+    ├── hooks/
+    │   └── useIdeas.js               # TanStack Query: fetch, create, toggle, done, delete + realtime
+    ├── store/
+    │   └── useStore.js               # Zustand: tabs, wizard, chips, priority, form, animations
+    ├── lib/
+    │   ├── constants.js              # Categories, costs, priorities, colors, icons, easing
+    │   └── supabase.js               # Supabase client init
+    └── styles/
+        ├── tokens.css                # CSS custom properties (palette, easing, radii)
+        └── global.css                # Reset + base styles
 ```
 
 ## Data Model
@@ -51,51 +75,58 @@ Ideas table in Supabase:
 ```
 id: number, title: string, description: string?, location: string?,
 cost: "$"|"$$"|"$$$"?, category: "Food"|"Outdoors"|"Cozy"|"Adventure"|"Culture"?,
-added_by: string?, hearted: boolean, done: boolean, created_at: timestamp
+added_by: string?, priority: "normal"|"urgent"?, expires_at: date?,
+hearted: boolean, done: boolean, deleted: boolean, created_at: timestamp
 ```
 
 ## State Management
 
-Custom pub/sub store (`store.js`). One-level-deep merge for nested objects.
+Zustand store (`useStore.js`):
 ```js
-store.get()           // Read state
-store.set({ ui: { loading: true } })  // Merge (doesn't clobber sibling keys)
-store.subscribe(fn)   // Listen for changes
+useStore((s) => s.activeTab)         // Read a slice
+useStore((s) => s.setActiveTab)      // Get an action
 ```
 
-State shape: `{ ideas[], ui{}, form{}, prefs{} }`
-
-UI state includes: `selectedCost, selectedCategory, archiveOpen, animating, loading, error, activeFilter`
+Key state: `activeTab, wizardStep, selectedCost, selectedCategory, selectedPriority, formTitle, formDescription, formExpiresAt, activeFilter, username, showEnvelopeAnimation, showStampCelebration`
 
 ## Key Patterns
 
-- **Event delegation**: Card actions (heart/done/delete) use delegation on `.card-list` containers
-- **Optimistic updates**: `toggleHeart` updates store immediately, rolls back on API failure
-- **DOM refs**: All elements cached in `dom.js` as `$` — import `{ $ }` to access
-- **No routing**: Tab-based SPA. `tabs.js` manages pane visibility with CSS slide animations
-- **Touch-only swipe**: `swipe.js` checks `ontouchstart` before binding — no desktop interference
-- **SVG icons**: All icons are Lucide-based inline SVGs via `icons.js` — no emoji, no icon fonts. Icons inherit `currentColor` for automatic theming. Static HTML icons injected on load by `injectIcons.js`; dynamic icons (cards, modals) imported directly in their modules
+- **TanStack Query**: `useIdeas()` for fetching, `useCreateIdea/useToggleHeart/useMarkDone/useDeleteIdea` mutations with optimistic updates
+- **Realtime sync**: Supabase postgres_changes channel auto-invalidates query cache
+- **Zustand store**: Flat state, individual setters, `resetForm()` clears all form state
+- **Framer Motion**: AnimatePresence for wizard steps, layout animations for cards, spring physics for hearts
+- **CSS Modules**: Scoped styles, design tokens in `tokens.css`
+- **Touch swipe**: Framer Motion drag on cards — left=delete, right=heart
+- **Lucide React**: Icon components imported directly, no icon fonts
+- **Graceful DB fallback**: `useCreateIdea` retries without priority/expires_at if columns don't exist yet
 
 ## Design System
 
 - **Fonts**: Caveat (headers), Lora (descriptions), DM Sans (body)
-- **Palette**: cream `#FDF6EC`, blush `#F2C4CE`, blush-dark `#E8A8B8`, sage `#B7C9B0`, lavender `#D4C5E2`, ink `#3D2B1F`, ink-faint `#A48B7C`
+- **Palette**: cream `#FDF6EC`, blush `#F2C4CE`, blush-dark `#E8A8B8`, sage `#B7C9B0`, lavender `#D4C5E2`, ink `#3D2B1F`, ink-faint `#A48B7C`, stamp-red `#C0392B`
 - **Category colors**: Food `#F4A261`, Outdoors `#81B29A`, Cozy `#E8C5E5`, Adventure `#F4D35E`, Culture `#B5C7D3`
-- **Easing**: `--ease-out: cubic-bezier(0.22, 1, 0.36, 1)` for tab/card/wizard transitions; `--spring: cubic-bezier(0.34, 1.56, 0.64, 1)` reserved for bouncy micro-interactions (hearts, stamps, dots)
-- **Icons**: Lucide SVG icons (stroke-based, 24x24 viewBox, `currentColor`) — no Apple emojis
-- **Aesthetic**: Paper texture overlay, postcard lines, envelope animation, wax-seal stamp, backdrop-filter on overlays
+- **Easing**: `--ease-out: cubic-bezier(0.22, 1, 0.36, 1)` for transitions; `--spring: cubic-bezier(0.34, 1.56, 0.64, 1)` for bouncy micro-interactions
+- **Icons**: Lucide React components (stroke-based, `currentColor`)
+- **Aesthetic**: Paper texture, postcard lines, envelope animation, wax-seal stamp
 
 ## UI Features
 
-1. **Bottom tab bar** — Write / The Box / Archive with 400ms ease-out slide transitions
-2. **3-step wizard** — Form split into title → category+cost → location+signature (padding on steps, not viewport)
-3. **Category gradient bands** — Full-width color header on cards (replaces 4px left stripe)
-4. **Springy heart** — Scale 1.4x bounce animation on heart toggle
-5. **SVG checkmark draw** — Animated stroke on done button
-6. **Card removal** — Slide-down + fade-out on done/delete
-7. **Swipe gestures** — Left=delete (red hint), right=heart (pink hint), touch-only
-8. **Surprise Me FAB** — Floating dice picks random idea, opens modal with "Let's do this tonight"
-9. **Skeleton loading** — 3 shimmer placeholder cards during data fetch
-10. **Filter pills** — Sticky scrollable row in The Box tab (category + cost filters)
-11. **Confetti celebration** — Wax seal stamp slam + 40-piece confetti burst on marking done
-12. **Envelope animation** — 3D fold + drop into ballot box on form submit
+1. **Bottom tab bar** — Write / The Box / Archive with slide transitions
+2. **3-step wizard** — title → category+cost+priority+expiry → location+signature
+3. **Priority chips** — Normal / Time-sensitive toggle in wizard step 2
+4. **Expiry date picker** — Appears when Time-sensitive is selected; countdown on cards
+5. **Urgent-first sorting** — Urgent ideas float to top of Top Picks and The Box
+6. **Urgent filter pill** — Red-accented filter in The Box tab
+7. **Category gradient bands** — Full-width color header on cards with urgent badge
+8. **Springy heart** — Scale 1.4x bounce animation on heart toggle
+9. **Card removal** — Slide-down + fade-out on done/delete
+10. **Swipe gestures** — Left=delete (red hint), right=heart (pink hint), touch-only
+11. **Surprise Me FAB** — Floating dice picks random idea, opens modal
+12. **Skeleton loading** — Shimmer placeholder cards during data fetch
+13. **Filter pills** — Sticky scrollable row (category + cost + urgent filters)
+14. **Confetti celebration** — Wax seal stamp slam + confetti burst on marking done
+15. **Envelope animation** — 3D fold + drop into ballot box on form submit
+
+## Deprecated: Vanilla JS Version
+
+The files `index.html` and `src/` contain a legacy vanilla JS implementation. These are **not deployed** and should not be modified. They remain in the repo for historical reference only.

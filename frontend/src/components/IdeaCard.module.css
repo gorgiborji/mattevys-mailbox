@@ -14,6 +14,11 @@
   filter: saturate(0.7);
 }
 
+.expired {
+  opacity: 0.55;
+  filter: saturate(0.6);
+}
+
 .categoryBand {
   height: 38px;
   border-bottom: 1px dashed rgba(180, 150, 120, 0.32);
@@ -21,6 +26,25 @@
   align-items: center;
   justify-content: flex-end;
   padding: 0 10px;
+  gap: 8px;
+}
+
+.bandUrgent {
+  background: linear-gradient(135deg, rgba(192, 57, 43, 0.15) 0%, rgba(192, 57, 43, 0.04) 100%) !important;
+  border-bottom-color: rgba(192, 57, 43, 0.2);
+}
+
+.urgentBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--stamp-red);
+  background: rgba(192, 57, 43, 0.1);
+  border-radius: 100px;
+  padding: 2px 8px;
 }
 
 .categoryIcon {
@@ -129,4 +153,25 @@
 .noBtn {
   color: var(--ink-light) !important;
   border-color: var(--border) !important;
+}
+
+/* ── Expiry labels ────────────────────────────────────────────── */
+.expiryItem {
+  font-weight: 500;
+}
+
+.expiryExpired {
+  color: var(--stamp-red) !important;
+  border-color: rgba(192, 57, 43, 0.25) !important;
+  background: rgba(192, 57, 43, 0.06) !important;
+}
+
+.expiryUrgent {
+  color: var(--stamp-red) !important;
+  border-color: rgba(192, 57, 43, 0.2) !important;
+}
+
+.expirySoon {
+  color: #b8860b !important;
+  border-color: rgba(184, 134, 11, 0.2) !important;
 }

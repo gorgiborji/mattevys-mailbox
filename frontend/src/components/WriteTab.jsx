@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PenLine, MapPin, Stamp, Send } from 'lucide-react';
+import { PenLine, MapPin, Stamp, Send, AlertTriangle, Clock } from 'lucide-react';
 import { useCreateIdea } from '../hooks/useIdeas';
 import { useStore } from '../store/useStore';
 import { CATEGORIES, COSTS, EASE_OUT } from '../lib/constants';
@@ -19,12 +19,16 @@ export default function WriteTab() {
   const setStep = useStore((s) => s.setWizardStep);
   const selectedCost = useStore((s) => s.selectedCost);
   const selectedCategory = useStore((s) => s.selectedCategory);
+  const selectedPriority = useStore((s) => s.selectedPriority);
   const setSelectedCost = useStore((s) => s.setSelectedCost);
   const setSelectedCategory = useStore((s) => s.setSelectedCategory);
+  const setSelectedPriority = useStore((s) => s.setSelectedPriority);
   const formTitle = useStore((s) => s.formTitle);
   const formDescription = useStore((s) => s.formDescription);
+  const formExpiresAt = useStore((s) => s.formExpiresAt);
   const setFormTitle = useStore((s) => s.setFormTitle);
   const setFormDescription = useStore((s) => s.setFormDescription);
+  const setFormExpiresAt = useStore((s) => s.setFormExpiresAt);
   const resetForm = useStore((s) => s.resetForm);
   const username = useStore((s) => s.username);
   const setUsername = useStore((s) => s.setUsername);
@@ -98,6 +102,8 @@ export default function WriteTab() {
       category: selectedCategory || null,
       location: locationRef.current?.value.trim() || null,
       added_by: name || null,
+      priority: selectedPriority || 'normal',
+      expires_at: formExpiresAt || null,
       hearted: false,
       done: false,
     };
@@ -128,8 +134,10 @@ export default function WriteTab() {
   }, [
     formTitle,
     formDescription,
+    formExpiresAt,
     selectedCost,
     selectedCategory,
+    selectedPriority,
     createIdea,
     resetForm,
     setShowEnvelope,
@@ -264,6 +272,51 @@ export default function WriteTab() {
                     </button>
                   ))}
                 </div>
+                <div
+                  className={styles.chipGroup}
+                  role="radiogroup"
+                  aria-label="Priority level"
+                  style={{ marginTop: 10 }}
+                >
+                  <button
+                    type="button"
+                    className={`${styles.chip} ${styles.chipPriority} ${selectedPriority === 'normal' ? styles.chipSelected : ''}`}
+                    onClick={() => setSelectedPriority('normal')}
+                    role="radio"
+                    aria-checked={selectedPriority === 'normal'}
+                  >
+                    Normal
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.chip} ${styles.chipPriority} ${styles.chipUrgent} ${selectedPriority === 'urgent' ? styles.chipUrgentSelected : ''}`}
+                    onClick={() => setSelectedPriority('urgent')}
+                    role="radio"
+                    aria-checked={selectedPriority === 'urgent'}
+                  >
+                    <AlertTriangle size={12} /> Time-sensitive
+                  </button>
+                </div>
+                <AnimatePresence>
+                  {selectedPriority === 'urgent' && (
+                    <motion.div
+                      className={styles.fieldRow}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2, ease: EASE_OUT }}
+                    >
+                      <Clock size={14} className={styles.fieldIcon} />
+                      <input
+                        className={styles.fieldExpires}
+                        type="date"
+                        aria-label="Expiration date"
+                        value={formExpiresAt}
+                        onChange={(e) => setFormExpiresAt(e.target.value)}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
 

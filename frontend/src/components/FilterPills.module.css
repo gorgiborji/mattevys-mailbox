@@ -47,3 +47,20 @@
   font-weight: 500;
   box-shadow: 0 2px 6px rgba(242, 196, 206, 0.3);
 }
+
+.urgentPill {
+  border-color: rgba(192, 57, 43, 0.3);
+  color: var(--stamp-red);
+}
+
+.urgentPill:hover {
+  border-color: var(--stamp-red);
+  background: rgba(192, 57, 43, 0.06);
+}
+
+.urgentPill.active {
+  background: var(--stamp-red);
+  color: #fff;
+  border-color: var(--stamp-red);
+  box-shadow: 0 2px 6px rgba(192, 57, 43, 0.3);
+}
