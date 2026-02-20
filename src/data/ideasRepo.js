@@ -12,7 +12,19 @@ export async function listIdeas() {
 
 export async function addIdea(idea) {
   const { error } = await sb.from('ideas').insert([idea]);
-  if (error) throw error;
+
+  // Fallback: if insert fails because priority/expires_at columns don't exist
+  // yet (migration not run), retry without those fields
+  if (error) {
+    const msg = (error.message || '').toLowerCase();
+    if (msg.includes('priority') || msg.includes('expires_at') || msg.includes('column')) {
+      const { priority, expires_at, ...coreIdea } = idea;
+      const { error: retryError } = await sb.from('ideas').insert([coreIdea]);
+      if (retryError) throw retryError;
+      return;
+    }
+    throw error;
+  }
 }
 
 export async function updateIdea(id, patch) {
