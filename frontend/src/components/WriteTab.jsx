@@ -21,6 +21,10 @@ export default function WriteTab() {
   const selectedCategory = useStore((s) => s.selectedCategory);
   const setSelectedCost = useStore((s) => s.setSelectedCost);
   const setSelectedCategory = useStore((s) => s.setSelectedCategory);
+  const formTitle = useStore((s) => s.formTitle);
+  const formDescription = useStore((s) => s.formDescription);
+  const setFormTitle = useStore((s) => s.setFormTitle);
+  const setFormDescription = useStore((s) => s.setFormDescription);
   const resetForm = useStore((s) => s.resetForm);
   const username = useStore((s) => s.username);
   const setUsername = useStore((s) => s.setUsername);
@@ -52,7 +56,7 @@ export default function WriteTab() {
   }, [username]);
 
   const goNext = useCallback(() => {
-    if (step === 0 && !titleRef.current?.value.trim()) {
+    if (step === 0 && !formTitle.trim()) {
       titleRef.current?.focus();
       titleRef.current?.classList.add(styles.shake);
       setTimeout(() => titleRef.current?.classList.remove(styles.shake), 600);
@@ -60,7 +64,7 @@ export default function WriteTab() {
     }
     directionRef.current = 1;
     setStep(step + 1);
-  }, [step, setStep]);
+  }, [step, setStep, formTitle]);
 
   const goPrev = useCallback(() => {
     directionRef.current = -1;
@@ -81,7 +85,7 @@ export default function WriteTab() {
   );
 
   const handleSubmit = useCallback(async () => {
-    const title = titleRef.current?.value.trim();
+    const title = formTitle.trim();
     if (!title) return;
 
     const name = nameRef.current?.value.trim() || '';
@@ -89,7 +93,7 @@ export default function WriteTab() {
 
     const ideaData = {
       title,
-      description: descRef.current?.value.trim() || null,
+      description: formDescription.trim() || null,
       cost: selectedCost || null,
       category: selectedCategory || null,
       location: locationRef.current?.value.trim() || null,
@@ -113,8 +117,6 @@ export default function WriteTab() {
     try {
       await createIdea.mutateAsync(ideaData);
       await waitForAnimation();
-      if (titleRef.current) titleRef.current.value = '';
-      if (descRef.current) descRef.current.value = '';
       if (locationRef.current) locationRef.current.value = '';
       resetForm();
       setShowEnvelope(false);
@@ -124,6 +126,8 @@ export default function WriteTab() {
       setShowEnvelope(false);
     }
   }, [
+    formTitle,
+    formDescription,
     selectedCost,
     selectedCategory,
     createIdea,
@@ -197,6 +201,8 @@ export default function WriteTab() {
                   placeholder="What's the idea?"
                   maxLength={120}
                   autoComplete="off"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
                 <input
@@ -206,6 +212,8 @@ export default function WriteTab() {
                   placeholder="Describe it in one line..."
                   maxLength={240}
                   autoComplete="off"
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
               </motion.div>
