@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Mattevy's Mailbox",
+    "slug": "mattevys-mailbox",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "mattevy",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FDF6EC"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.mattevy.mailbox",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-notifications",
+      "expo-secure-store",
+      "expo-auth-session"
+    ]
+  }
+}

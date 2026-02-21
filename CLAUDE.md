@@ -127,6 +127,34 @@ Key state: `activeTab, wizardStep, selectedCost, selectedCategory, selectedPrior
 14. **Confetti celebration** — Wax seal stamp slam + confetti burst on marking done
 15. **Envelope animation** — 3D fold + drop into ballot box on form submit
 
+## Roadmap & Future Direction
+
+This app is evolving from a 2-person web app into a **multi-tenant native iOS app** (Expo/React Native). See `agents.md` for the full phased roadmap.
+
+### Key architectural decisions:
+- **Native app**: Expo (React Native) — reuse Supabase backend, rewrite UI in RN
+- **Auth**: Supabase Auth — Magic link + Sign in with Apple + Sign in with Google
+- **Multi-tenancy**: Each couple gets a `mailbox`; ideas scoped by `mailbox_id` + RLS
+- **Notifications**: Expo Push Notifications as primary, Twilio SMS as fallback
+- **Widgets**: WidgetKit via native Swift extension (Expo config plugin)
+- **Web version**: Will remain deployed on Vercel as a companion/fallback
+
+### When building new features, keep in mind:
+- All new Supabase tables should include `mailbox_id` for multi-tenant isolation
+- All queries should be scoped to the authenticated user's mailbox
+- Design components to be portable — avoid web-only APIs where possible
+- RLS policies are coming — write queries as if they already exist
+
+## Future Features (see agents.md for details)
+- Edit ideas after submission
+- Comments & emoji reactions
+- Photo attachments (Supabase Storage)
+- Calendar integration (schedule dates)
+- History & stats dashboard
+- Dark mode
+- Onboarding & invite flows
+- iOS widgets (WidgetKit)
+
 ## Deprecated: Vanilla JS Version
 
 The files `index.html` and `src/` contain a legacy vanilla JS implementation. These are **not deployed** and should not be modified. They remain in the repo for historical reference only.
