@@ -10,6 +10,7 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -55,4 +56,51 @@ body::before {
 button,
 [role="button"] {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Headings: kill orphans, keep script/serif headers balanced ─── */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ── Tabular figures so counts and prices don't jitter ──────────── */
+.statPill strong,
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Keyboard focus ─────────────────────────────────────────────── */
+/* The app strips default outlines on buttons/inputs; restore a warm,
+   visible ring for keyboard users only (mouse clicks stay clean). */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  box-shadow: none;
+  border-bottom-color: var(--focus-color) !important;
+}
+
+/* ── Respect reduced-motion: still functional, just calm ────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

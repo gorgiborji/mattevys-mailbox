@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Dice5, X, MapPin, DollarSign, Tag, Sparkles } from 'lucide-react';
 import { useIdeas, selectTopPicks, selectBox, useMarkDone } from '../hooks/useIdeas';
 import { useStore } from '../store/useStore';
@@ -12,6 +12,7 @@ export default function SurpriseFab() {
   const { data: ideas = [] } = useIdeas();
   const markDone = useMarkDone();
   const setShowStamp = useStore((s) => s.setShowStamp);
+  const reduceMotion = useReducedMotion();
 
   const pool = useMemo(
     () => [...selectTopPicks(ideas), ...selectBox(ideas)],
@@ -50,10 +51,12 @@ export default function SurpriseFab() {
         onClick={openSurprise}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        animate={{ y: [0, -3, 0] }}
-        transition={{
-          y: { repeat: Infinity, duration: 3, ease: 'easeInOut' },
-        }}
+        animate={reduceMotion ? undefined : { y: [0, -3, 0] }}
+        transition={
+          reduceMotion
+            ? undefined
+            : { y: { repeat: Infinity, duration: 3, ease: 'easeInOut' } }
+        }
         aria-label="Surprise me — pick a random idea"
       >
         <Dice5 size={24} />
