@@ -34,4 +34,9 @@
   --radius-md:   14px;
   --radius-lg:   20px;
   --radius-pill: 100px;
+
+  /* ── Focus ring ──────────────────────────────────────────────── */
+  /* Warm-tinted to sit with the paper palette instead of a stock blue */
+  --focus-ring:   0 0 0 3px rgba(209, 109, 134, 0.45);
+  --focus-color:  #d16d86;
 }
