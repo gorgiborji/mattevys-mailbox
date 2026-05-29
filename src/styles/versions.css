@@ -1656,3 +1656,16 @@ body {
 .tab-bar-label {
   transition: color 0.35s ease;
 }
+
+/* Submit papercraft animation variants */
+body.version-2 .anim-overlay.anim-style-gentle {
+  --anim-drop-ms: 520ms;
+  --anim-heart-ms: 780ms;
+  --anim-overlay-bg: rgba(252, 244, 231, 0.95);
+}
+
+body.version-3 .anim-overlay.anim-style-playful {
+  --anim-drop-ms: 390ms;
+  --anim-heart-ms: 640ms;
+  --anim-overlay-bg: rgba(253, 246, 236, 0.88);
+}
