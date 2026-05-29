@@ -1333,9 +1333,13 @@ section { margin-top: 22px; }
 
 /* ── ANIMATION OVERLAY ────────────────────────────────────────── */
 .anim-overlay {
+  --anim-drop-ms: 440ms;
+  --anim-heart-ms: 680ms;
+  --anim-box-ms: 180ms;
+  --anim-overlay-bg: rgba(253, 246, 236, 0.94);
   position: fixed;
   inset: 0;
-  background: rgba(253, 246, 236, 0.94);
+  background: var(--anim-overlay-bg);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -1350,15 +1354,17 @@ section { margin-top: 22px; }
   opacity: 1;
 }
 
-.anim-envelope {
-  width: 80px;
-  height: 56px;
+.anim-ballot {
+  width: 82px;
+  height: 62px;
   position: absolute;
+  transform-origin: 50% 20%;
 }
 
 .anim-ballot-box {
   width: 100px;
   height: 120px;
+  transform-origin: 50% 45%;
 }
 
 .anim-hearts {
@@ -1370,9 +1376,19 @@ section { margin-top: 22px; }
 .floating-heart {
   position: absolute;
   font-size: 18px;
-  animation: floatHeart linear forwards;
+  animation: floatHeart var(--anim-heart-ms) cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
   opacity: 0;
-  color: var(--blush);
+}
+
+.anim-overlay.anim-style-gentle {
+  --anim-drop-ms: 500ms;
+  --anim-heart-ms: 760ms;
+}
+
+.anim-overlay.anim-style-playful {
+  --anim-drop-ms: 400ms;
+  --anim-heart-ms: 650ms;
+  --anim-overlay-bg: rgba(253, 246, 236, 0.9);
 }
 
 /* ── KEYFRAMES ────────────────────────────────────────────────── */
@@ -1382,38 +1398,49 @@ section { margin-top: 22px; }
   100% { transform: perspective(800px) rotateX(-180deg) scaleX(0.9); opacity: 0.8; }
 }
 
-@keyframes envelopeDrop {
-  0%   { transform: translateY(-80px) rotate(-5deg); opacity: 1; }
-  70%  { transform: translateY(0px) rotate(2deg); }
-  85%  { transform: translateY(-8px) rotate(-1deg); }
-  100% { transform: translateY(8px) rotate(0deg); opacity: 0; }
+@keyframes ballotHover {
+  0%   { transform: translateY(-8px) rotate(-6deg) rotateX(8deg) scale(1); }
+  50%  { transform: translateY(-14px) rotate(-3deg) rotateX(6deg) scale(1.02); }
+  100% { transform: translateY(-8px) rotate(-5deg) rotateX(8deg) scale(1); }
+}
+
+@keyframes ballotDrop {
+  0%   { transform: translateY(-10px) rotate(-5deg) rotateX(10deg) scale(1); opacity: 1; }
+  45%  { transform: translateY(32px) rotate(3deg) rotateX(6deg) scale(1.03); }
+  75%  { transform: translateY(72px) rotate(-1deg) rotateX(0deg) scale(0.96); }
+  88%  { transform: translateY(80px) rotate(0deg) scale(0.9, 0.74); opacity: 1; }
+  100% { transform: translateY(88px) rotate(0deg) scale(0.75); opacity: 0; }
 }
 
 @keyframes floatHeart {
-  0%   { transform: translateY(0) scale(0.8); opacity: 0.8; }
-  100% { transform: translateY(-90px) scale(1.3); opacity: 0; }
+  0% {
+    transform: translate(0, 0) scale(calc(var(--heart-scale, 1) * 0.7));
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--drift-x, 0px), var(--drift-y, -70px)) scale(calc(var(--heart-scale, 1) * 1.15));
+    opacity: 0;
+  }
 }
 
-@keyframes boxPulse {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.04); }
-  100% { transform: scale(1); }
+@keyframes boxCompress {
+  0%   { transform: scale(1, 1); }
+  35%  { transform: scale(1.03, 0.94); }
+  70%  { transform: scale(0.99, 1.02); }
+  100% { transform: scale(1, 1); }
 }
 
-@keyframes envelopePulse {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes overlayFadeOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-overlay,
+  .anim-ballot,
+  .anim-ballot-box,
+  .floating-heart {
+    animation: none !important;
+    transition-duration: 120ms !important;
+  }
 }
 
 /* ── PRIORITY CHIPS ──────────────────────────────────────────── */
